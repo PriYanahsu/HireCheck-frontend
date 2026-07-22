@@ -1,0 +1,359 @@
+import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "@/lib/auth";
+import { Link } from "wouter";
+import { apiRequest } from "@/lib/queryClient";
+import { toast } from "@/hooks/use-toast";
+import type { Test } from "@/lib/schema";
+import { PageShell } from "@/components/layout/page-shell";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { formatDuration } from "@/lib/utils";
+import { 
+  Plus, 
+  Search, 
+  Clock, 
+  Users, 
+  CheckCircle, 
+  ClipboardList, 
+  Eye, 
+  Pencil, 
+  ExternalLink,
+  Trash2,
+} from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Input } from "@/components/ui/input";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+type TestStats = {
+  total: number;
+  completed: number;
+  inProgress: number;
+  pending: number;
+  avgScore?: number;
+};
+
+type TestWithStats = Test & { stats: TestStats };
+
+export default function TestsIndex() {
+  const { useRequireAuth } = useAuth();
+  const user = useRequireAuth();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [testToDelete, setTestToDelete] = useState<TestWithStats | null>(null);
+  const queryClient = useQueryClient();
+  
+  const { data: tests, isLoading } = useQuery<TestWithStats[]>({
+    queryKey: ["/api/tests"],
+    enabled: !!user,
+  });
+
+  const deleteTestMutation = useMutation({
+    mutationFn: async (testId: number) => {
+      await apiRequest("DELETE", `/api/tests/${testId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/tests"] });
+      setTestToDelete(null);
+      toast({ title: "Test deleted successfully" });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Failed to delete test",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+  
+  if (!user) {
+    return null;
+  }
+  
+  const filteredTests = tests
+    ? [...tests]
+        .filter((test) =>
+          test.title.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+        .sort(
+          (a, b) =>
+            new Date(b.createdAt ?? 0).getTime() -
+            new Date(a.createdAt ?? 0).getTime()
+        )
+    : undefined;
+  
+  return (
+    <PageShell
+      title="Tests"
+      subtitle="Manage and monitor your assessments"
+      action={
+        <Button asChild>
+          <Link href="/tests/create">
+            <Plus className="h-4 w-4" />
+            Create Test
+          </Link>
+        </Button>
+      }
+    >
+            <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div className="relative w-full md:w-64">
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+                <Input
+                  type="search"
+                  placeholder="Search tests..."
+                  className="pl-8"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+              <Button asChild className="md:hidden">
+                <Link href="/tests/create">
+                  <Plus className="h-4 w-4 mr-1.5" />
+                  Create Test
+                </Link>
+              </Button>
+            </div>
+            
+            <Tabs defaultValue="all">
+              <TabsList className="mb-4">
+                <TabsTrigger value="all">All Tests</TabsTrigger>
+                <TabsTrigger value="active">Active</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="all">
+                {isLoading ? (
+                  <Card>
+                    <CardContent className="pt-6">
+                      <div className="text-center py-6">
+                        <p>Loading tests...</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ) : (filteredTests?.length ?? 0) > 0 ? (
+                  <Card>
+                    <CardContent className="p-0">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Test Name</TableHead>
+                            <TableHead className="hidden md:table-cell">Duration</TableHead>
+                            <TableHead className="hidden md:table-cell">Candidates</TableHead>
+                            <TableHead className="hidden md:table-cell">Completion</TableHead>
+                            <TableHead className="text-right">Actions</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {filteredTests?.map((test) => (
+                            <TableRow key={test.id}>
+                              <TableCell className="font-medium">{test.title}</TableCell>
+                              <TableCell className="hidden md:table-cell">
+                                <div className="flex items-center">
+                                  <Clock className="h-4 w-4 mr-1.5 text-gray-500" />
+                                  {formatDuration(test.duration)}
+                                </div>
+                              </TableCell>
+                              <TableCell className="hidden md:table-cell">
+                                <div className="flex items-center">
+                                  <Users className="h-4 w-4 mr-1.5 text-gray-500" />
+                                  {test.stats.total} sent
+                                </div>
+                              </TableCell>
+                              <TableCell className="hidden md:table-cell">
+                                <div className="flex items-center">
+                                  <CheckCircle className="h-4 w-4 mr-1.5 text-gray-500" />
+                                  {test.stats.completed} / {test.stats.total}
+                                </div>
+                              </TableCell>
+                              <TableCell className="text-right">
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="sm">
+                                      <ClipboardList className="h-4 w-4" />
+                                      <span className="sr-only">Open menu</span>
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end">
+                                    <DropdownMenuItem asChild>
+                                      <Link href={`/tests/${test.id}`}>
+                                        <a className="flex items-center cursor-pointer">
+                                          <Eye className="h-4 w-4 mr-2" />
+                                          View Details
+                                        </a>
+                                      </Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem asChild>
+                                      <Link href={`/tests/${test.id}/edit`}>
+                                        <a className="flex items-center cursor-pointer">
+                                          <Pencil className="h-4 w-4 mr-2" />
+                                          Edit Test
+                                        </a>
+                                      </Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                      <ExternalLink className="h-4 w-4 mr-2" />
+                                      Invite Candidate
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                      className="text-destructive focus:text-destructive"
+                                      onSelect={(e) => {
+                                        e.preventDefault();
+                                        setTestToDelete(test);
+                                      }}
+                                    >
+                                      <Trash2 className="h-4 w-4 mr-2" />
+                                      Delete Test
+                                    </DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <Card>
+                    <CardContent className="pt-6">
+                      <div className="text-center py-6">
+                        <p className="text-sm text-gray-500 mb-4">
+                          {searchQuery ? (
+                            <>No tests found matching "<strong>{searchQuery}</strong>"</>
+                          ) : (
+                            "You haven't created any tests yet."
+                          )}
+                        </p>
+                        {!searchQuery && (
+                          <Button asChild>
+                            <Link href="/tests/create">
+                              <Plus className="h-4 w-4 mr-1.5" />
+                              Create Your First Test
+                            </Link>
+                          </Button>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+              </TabsContent>
+              
+              <TabsContent value="active">
+                {isLoading ? (
+                  <Card>
+                    <CardContent className="pt-6">
+                      <div className="text-center py-6">
+                        <p>Loading tests...</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ) : (filteredTests?.filter((test) => test.stats.inProgress > 0).length ?? 0) > 0 ? (
+                  <Card>
+                    <CardContent className="p-0">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Test Name</TableHead>
+                            <TableHead className="hidden md:table-cell">Duration</TableHead>
+                            <TableHead className="hidden md:table-cell">Active Candidates</TableHead>
+                            <TableHead className="text-right">Actions</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {filteredTests
+                            ?.filter((test) => test.stats.inProgress > 0)
+                            .map((test) => (
+                              <TableRow key={test.id}>
+                                <TableCell className="font-medium">{test.title}</TableCell>
+                                <TableCell className="hidden md:table-cell">
+                                  <div className="flex items-center">
+                                    <Clock className="h-4 w-4 mr-1.5 text-gray-500" />
+                                    {formatDuration(test.duration)}
+                                  </div>
+                                </TableCell>
+                                <TableCell className="hidden md:table-cell">
+                                  <Badge variant="warning">
+                                    {test.stats.inProgress} in progress
+                                  </Badge>
+                                </TableCell>
+                                <TableCell className="text-right">
+                                  <Button variant="outline" size="sm" asChild>
+                                    <Link href={`/tests/${test.id}`}>
+                                      <Eye className="h-4 w-4 mr-1.5" />
+                                      View
+                                    </Link>
+                                  </Button>
+                                </TableCell>
+                              </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <Card>
+                    <CardContent className="pt-6">
+                      <div className="text-center py-6">
+                        <p className="text-sm text-gray-500">
+                          No active tests found.
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+              </TabsContent>
+            </Tabs>
+
+      <AlertDialog
+        open={!!testToDelete}
+        onOpenChange={(open) => !open && setTestToDelete(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete test?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete &quot;{testToDelete?.title}&quot; and all
+              its questions and candidate data. This cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleteTestMutation.isPending}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              disabled={deleteTestMutation.isPending}
+              onClick={() =>
+                testToDelete && deleteTestMutation.mutate(testToDelete.id)
+              }
+            >
+              {deleteTestMutation.isPending ? "Deleting..." : "Delete"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </PageShell>
+  );
+}
