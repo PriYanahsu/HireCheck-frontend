@@ -54,12 +54,12 @@ function compactDate(date?: string) {
 
 function statusBadge(status: string) {
   if (status === "completed") {
-    return <Badge variant="success" className="text-[10px] sm:text-xs px-1.5 py-0 h-5">Completed</Badge>;
+    return <Badge variant="success" className="h-4 px-1.5 py-0 text-[9px] sm:h-5 sm:text-xs">Completed</Badge>;
   }
   if (status === "in_progress") {
-    return <Badge variant="secondary" className="text-[10px] sm:text-xs px-1.5 py-0 h-5">In Progress</Badge>;
+    return <Badge variant="secondary" className="h-4 px-1.5 py-0 text-[9px] sm:h-5 sm:text-xs">In Progress</Badge>;
   }
-  return <Badge variant="outline" className="text-[10px] sm:text-xs px-1.5 py-0 h-5">Pending</Badge>;
+  return <Badge variant="outline" className="h-4 px-1.5 py-0 text-[9px] sm:h-5 sm:text-xs">Pending</Badge>;
 }
 
 function scoreBadge(score?: number, passingScore?: number) {
@@ -68,7 +68,7 @@ function scoreBadge(score?: number, passingScore?: number) {
   return (
     <Badge
       variant={value >= pass ? "success" : "destructive"}
-      className="text-[10px] sm:text-xs px-1.5 py-0 h-5"
+      className="h-4 px-1.5 py-0 text-[9px] sm:h-5 sm:text-xs"
     >
       {value}%
     </Badge>
@@ -101,13 +101,17 @@ function MobileCandidateCard({
         : "Invited";
 
   return (
-    <div className="px-3 py-3.5 space-y-2">
-      <div className="flex items-start justify-between gap-2">
+    <div className="px-2.5 py-2 space-y-1">
+      <div className="flex items-start justify-between gap-1.5">
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-medium truncate">{candidate.name}</p>
-          <p className="text-xs text-muted-foreground truncate mt-0.5">{candidate.email}</p>
+          <p className="truncate text-[12px] font-medium leading-tight">
+            {candidate.name}
+          </p>
+          <p className="mt-0.5 truncate text-[10px] leading-tight text-muted-foreground">
+            {candidate.email}
+          </p>
         </div>
-        <div className="shrink-0 flex items-center gap-1">
+        <div className="shrink-0">
           {mode === "completed"
             ? scoreBadge(candidate.score, candidate.passingScore)
             : statusBadge(candidate.status)}
@@ -115,20 +119,20 @@ function MobileCandidateCard({
       </div>
 
       <Link href={`/tests/${candidate.testId}`}>
-        <a className="block text-xs text-primary truncate hover:underline">
+        <a className="block truncate text-[11px] leading-tight text-primary hover:underline">
           {candidate.testTitle}
         </a>
       </Link>
 
       <div className="flex items-center justify-between gap-2">
-        <p className="text-[11px] text-muted-foreground">
+        <p className="text-[10px] leading-tight text-muted-foreground">
           {metaLabel} {compactDate(metaDate)}
         </p>
         <div className="flex items-center shrink-0">
           {mode === "completed" || mode === "in_progress" ? (
-            <Button variant="ghost" size="sm" className="h-7 text-xs px-2" asChild>
+            <Button variant="ghost" size="sm" className="h-6 px-1.5 text-[10px]" asChild>
               <Link href={`/tests/${candidate.testId}`}>
-                <Eye className="h-3.5 w-3.5 mr-1" />
+                <Eye className="mr-0.5 h-3 w-3" />
                 View
               </Link>
             </Button>
@@ -137,19 +141,19 @@ function MobileCandidateCard({
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8"
+                className="h-6 w-6"
                 onClick={() => onCopy(candidate.testLink)}
               >
-                <Copy className="h-3.5 w-3.5" />
+                <Copy className="h-3 w-3" />
                 <span className="sr-only">Copy link</span>
               </Button>
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8"
+                className="h-6 w-6"
                 onClick={() => onMail(candidate)}
               >
-                <Mail className="h-3.5 w-3.5" />
+                <Mail className="h-3 w-3" />
                 <span className="sr-only">Send email</span>
               </Button>
             </>
