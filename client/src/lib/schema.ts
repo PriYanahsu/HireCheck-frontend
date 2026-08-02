@@ -3,7 +3,7 @@ import { z } from "zod";
 /** Frontend-only types + form schemas (Spring/JPA owns the DB). */
 
 export const insertUserSchema = z.object({
-  username: z.string().min(1),
+  username: z.string().trim().min(1),
   password: z.string().min(1),
   email: z.string().email(),
   name: z.string().min(1),
@@ -34,7 +34,7 @@ export const insertQuestionSchema = z.object({
 });
 
 export const loginSchema = z.object({
-  username: z.string().min(1, "Username is required"),
+  username: z.string().trim().min(1, "Username is required"),
   password: z.string().min(1, "Password is required"),
 });
 

@@ -31,7 +31,10 @@ export function useAuth() {
   // Login mutation
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginCredentials) => {
-      const res = await apiRequest("POST", "/api/auth/login", credentials);
+      const res = await apiRequest("POST", "/api/auth/login", {
+        ...credentials,
+        username: credentials.username.trim(),
+      });
       const data = await res.json();
       if (data.token) {
         localStorage.setItem("token", data.token);
@@ -58,7 +61,10 @@ export function useAuth() {
   // Signup mutation
   const signupMutation = useMutation({
     mutationFn: async (userData: any) => {
-      const res = await apiRequest("POST", "/api/auth/signup", userData);
+      const res = await apiRequest("POST", "/api/auth/signup", {
+        ...userData,
+        username: typeof userData.username === "string" ? userData.username.trim() : userData.username,
+      });
       const data = await res.json();
       if (data.token) {
         localStorage.setItem("token", data.token);
