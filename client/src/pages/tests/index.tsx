@@ -69,15 +69,21 @@ function shortDuration(minutes: number): string {
 function TestActionsMenu({
   test,
   onDelete,
+  compact = false,
 }: {
   test: TestWithStats;
   onDelete: (test: TestWithStats) => void;
+  compact?: boolean;
 }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0">
-          <MoreHorizontal className="h-4 w-4" />
+        <Button
+          variant="ghost"
+          size="icon"
+          className={compact ? "h-6 w-6 shrink-0" : "h-8 w-8 shrink-0"}
+        >
+          <MoreHorizontal className={compact ? "h-3.5 w-3.5" : "h-4 w-4"} />
           <span className="sr-only">Open menu</span>
         </Button>
       </DropdownMenuTrigger>
@@ -127,65 +133,60 @@ function MobileTestCard({
   showActiveBadge?: boolean;
 }) {
   const isActive = test.stats.pending > 0 || test.stats.inProgress > 0;
+  const statusLabel = showActiveBadge
+    ? `${test.stats.inProgress} active`
+    : isActive
+      ? "Active"
+      : "Idle";
 
   return (
-    <div className="px-3 py-3.5 space-y-2">
-      <div className="flex items-start justify-between gap-2">
-        <div className="min-w-0 flex-1 pr-1">
-          <Link href={`/tests/${test.id}`}>
-            <a className="block">
-              <p className="text-sm font-medium text-primary line-clamp-2 leading-snug">
+    <div className="px-2.5 py-2">
+      <div className="flex items-start gap-1">
+        <Link href={`/tests/${test.id}`} className="min-w-0 flex-1">
+          <a className="block min-w-0 space-y-1">
+            <div className="flex items-center gap-1.5 min-w-0">
+              <span
+                className={`h-1.5 w-1.5 shrink-0 rounded-full ${
+                  isActive || showActiveBadge
+                    ? "bg-emerald-500"
+                    : "bg-muted-foreground/40"
+                }`}
+              />
+              <p
+                className="min-w-0 flex-1 truncate text-[12px] font-medium leading-tight text-primary"
+                title={test.title}
+              >
                 {test.title}
               </p>
-            </a>
-          </Link>
-        </div>
-        <div className="flex items-center gap-1 shrink-0 ml-auto">
-          {showActiveBadge ? (
-            <Badge variant="warning" className="text-[10px] px-1.5 py-0 h-5">
-              {test.stats.inProgress} active
-            </Badge>
-          ) : (
-            <Badge
-              variant={isActive ? "success" : "outline"}
-              className="text-[10px] px-1.5 py-0 h-5"
-            >
-              {isActive ? "Active" : "Idle"}
-            </Badge>
-          )}
-          <TestActionsMenu test={test} onDelete={onDelete} />
+            </div>
+            <p className="pl-3.5 text-[10px] leading-tight tabular-nums text-muted-foreground">
+              {shortDuration(test.duration)}
+              <span className="mx-1 text-border">·</span>
+              {test.stats.total} invited
+              <span className="mx-1 text-border">·</span>
+              {test.stats.completed} done
+              {!showActiveBadge && (test.stats.inProgress > 0 || test.stats.pending > 0) && (
+                <>
+                  <span className="mx-1 text-border">·</span>
+                  {test.stats.inProgress}/{test.stats.pending} open
+                </>
+              )}
+            </p>
+          </a>
+        </Link>
+        <div className="flex shrink-0 items-center gap-0.5 pt-px">
+          <span
+            className={`px-0.5 text-[9px] font-medium tabular-nums ${
+              isActive || showActiveBadge
+                ? "text-emerald-600"
+                : "text-muted-foreground"
+            }`}
+          >
+            {statusLabel}
+          </span>
+          <TestActionsMenu test={test} onDelete={onDelete} compact />
         </div>
       </div>
-
-      <div className="flex items-center gap-3 text-xs text-muted-foreground">
-        <span className="inline-flex items-center gap-1">
-          <Clock className="h-3.5 w-3.5" />
-          {shortDuration(test.duration)}
-        </span>
-        <span className="inline-flex items-center gap-1">
-          <Users className="h-3.5 w-3.5" />
-          {test.stats.total} invited
-        </span>
-        <span className="inline-flex items-center gap-1">
-          <CheckCircle className="h-3.5 w-3.5" />
-          {test.stats.completed} done
-        </span>
-      </div>
-
-      {(test.stats.inProgress > 0 || test.stats.pending > 0) && !showActiveBadge && (
-        <div className="flex flex-wrap gap-x-3 text-xs text-muted-foreground">
-          {test.stats.inProgress > 0 && (
-            <span>
-              <span className="font-medium text-foreground">{test.stats.inProgress}</span> in progress
-            </span>
-          )}
-          {test.stats.pending > 0 && (
-            <span>
-              <span className="font-medium text-foreground">{test.stats.pending}</span> pending
-            </span>
-          )}
-        </div>
-      )}
     </div>
   );
 }

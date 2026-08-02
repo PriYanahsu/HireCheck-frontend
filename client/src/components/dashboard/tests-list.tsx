@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatDuration } from "@/lib/utils";
+import { formatDuration, cn } from "@/lib/utils";
 import { Clock, Plus, HelpCircle, Users } from "lucide-react";
 
 type Test = {
@@ -35,16 +35,16 @@ export function TestsList() {
   if (isLoading) {
     return (
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between p-4 pb-2 sm:p-6 sm:pb-2">
-          <CardTitle className="text-base sm:text-lg font-medium">Active Assessments</CardTitle>
-          <Skeleton className="h-8 w-24 sm:h-9 sm:w-28" />
+        <CardHeader className="flex flex-row items-center justify-between px-3 py-2.5 sm:p-6 sm:pb-2">
+          <CardTitle className="text-[13px] sm:text-lg font-medium">Active Assessments</CardTitle>
+          <Skeleton className="h-7 w-14 sm:h-9 sm:w-28" />
         </CardHeader>
         <CardContent className="p-0">
-          <div className="space-y-1">
+          <div>
             {[1, 2, 3].map((i) => (
-              <div key={i} className="p-3 sm:p-4 border-b border-border space-y-2">
-                <Skeleton className="h-4 w-48" />
-                <Skeleton className="h-3 w-40" />
+              <div key={i} className="px-3 py-2.5 border-b border-border space-y-1.5">
+                <Skeleton className="h-3.5 w-40" />
+                <Skeleton className="h-3 w-32" />
               </div>
             ))}
           </div>
@@ -56,11 +56,11 @@ export function TestsList() {
   if (error) {
     return (
       <Card>
-        <CardHeader className="p-4 sm:p-6">
-          <CardTitle className="text-base sm:text-lg font-medium">Active Assessments</CardTitle>
+        <CardHeader className="px-3 py-2.5 sm:p-6">
+          <CardTitle className="text-[13px] sm:text-lg font-medium">Active Assessments</CardTitle>
         </CardHeader>
-        <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
-          <p className="text-sm text-destructive">
+        <CardContent className="px-3 pb-3 sm:p-6 sm:pt-0">
+          <p className="text-xs text-destructive">
             Error loading tests: {(error as Error).message}
           </p>
         </CardContent>
@@ -70,11 +70,11 @@ export function TestsList() {
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between p-4 pb-2 sm:p-6 sm:pb-2 gap-2">
-        <CardTitle className="text-base sm:text-lg font-medium">Active Assessments</CardTitle>
-        <Button asChild size="sm" className="h-8 text-xs sm:h-9 sm:text-sm">
+      <CardHeader className="flex flex-row items-center justify-between px-3 py-2 sm:p-6 sm:pb-2 gap-2">
+        <CardTitle className="text-[13px] sm:text-lg font-medium">Active Assessments</CardTitle>
+        <Button asChild size="sm" className="h-7 text-[11px] sm:h-9 sm:text-sm px-2 sm:px-3">
           <Link href="/tests/create">
-            <Plus className="mr-1 h-3.5 w-3.5 sm:mr-1.5 sm:h-4 sm:w-4" />
+            <Plus className="mr-0.5 h-3 w-3 sm:mr-1.5 sm:h-4 sm:w-4" />
             <span className="sm:hidden">New</span>
             <span className="hidden sm:inline">Create New</span>
           </Link>
@@ -89,71 +89,69 @@ export function TestsList() {
               return (
                 <li key={test.id}>
                   <Link href={`/tests/${test.id}`}>
-                    <a className="block hover:bg-muted/50 transition-colors">
-                      <div className="px-3 py-3.5 sm:px-6 sm:py-4 space-y-2">
+                    <a className="block hover:bg-muted/40 active:bg-muted/60 transition-colors">
+                      {/* Mobile row */}
+                      <div className="sm:hidden px-3 py-2">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <span
+                            className={cn(
+                              "h-1.5 w-1.5 rounded-full shrink-0",
+                              isActive ? "bg-emerald-500" : "bg-muted-foreground/40"
+                            )}
+                          />
+                          <p
+                            className="flex-1 min-w-0 text-[12px] font-medium text-foreground truncate leading-tight"
+                            title={test.title}
+                          >
+                            {test.title}
+                          </p>
+                          <span
+                            className={cn(
+                              "text-[9px] font-medium shrink-0 tabular-nums",
+                              isActive ? "text-emerald-600" : "text-muted-foreground"
+                            )}
+                          >
+                            {isActive ? "Active" : "Idle"}
+                          </span>
+                        </div>
+                        <p className="mt-1 pl-3.5 text-[10px] text-muted-foreground leading-tight tabular-nums">
+                          {shortDuration(test.duration)}
+                          <span className="mx-1 text-border">·</span>
+                          {test.questionCount ?? 0} Q
+                          <span className="mx-1 text-border">·</span>
+                          {test.stats.total}/{test.stats.completed} done
+                        </p>
+                      </div>
+
+                      {/* Desktop row */}
+                      <div className="hidden sm:block px-6 py-4 space-y-2">
                         <div className="flex items-start gap-2">
                           <h3
-                            className="flex-1 min-w-0 text-sm font-medium text-primary line-clamp-2 sm:truncate sm:line-clamp-none"
+                            className="flex-1 min-w-0 text-sm font-medium text-primary truncate"
                             title={test.title}
                           >
                             {test.title}
                           </h3>
                           <Badge
                             variant={isActive ? "success" : "outline"}
-                            className="text-[10px] sm:text-xs shrink-0 mt-0.5"
+                            className="text-xs shrink-0"
                           >
                             {isActive ? "Active" : "Idle"}
                           </Badge>
                         </div>
-
-                        {/* Mobile meta — compact & clear */}
-                        <div className="sm:hidden space-y-1.5">
-                          <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                            <span className="inline-flex items-center gap-1">
-                              <Clock className="h-3.5 w-3.5" />
-                              {shortDuration(test.duration)}
-                            </span>
-                            <span className="inline-flex items-center gap-1">
-                              <HelpCircle className="h-3.5 w-3.5" />
-                              {test.questionCount ?? 0} Qs
-                            </span>
-                          </div>
-                          <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-muted-foreground">
-                            <span>
-                              <span className="font-medium text-foreground">{test.stats.total}</span> invited
-                            </span>
-                            <span>
-                              <span className="font-medium text-foreground">{test.stats.completed}</span> completed
-                            </span>
-                            {test.stats.inProgress > 0 && (
-                              <span>
-                                <span className="font-medium text-foreground">{test.stats.inProgress}</span> in progress
-                              </span>
-                            )}
-                            {test.stats.pending > 0 && (
-                              <span>
-                                <span className="font-medium text-foreground">{test.stats.pending}</span> pending
-                              </span>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* Desktop meta */}
-                        <div className="hidden sm:flex sm:items-center sm:justify-between">
-                          <div className="flex items-center gap-5 text-sm text-muted-foreground">
-                            <span className="inline-flex items-center">
-                              <Clock className="mr-1.5 h-4 w-4" />
-                              {formatDuration(test.duration)}
-                            </span>
-                            <span className="inline-flex items-center">
-                              <HelpCircle className="mr-1.5 h-4 w-4" />
-                              {test.questionCount ?? 0} questions
-                            </span>
-                            <span className="inline-flex items-center">
-                              <Users className="mr-1.5 h-4 w-4" />
-                              {test.stats.total} invited · {test.stats.completed} completed
-                            </span>
-                          </div>
+                        <div className="flex items-center gap-5 text-sm text-muted-foreground">
+                          <span className="inline-flex items-center">
+                            <Clock className="mr-1.5 h-4 w-4" />
+                            {formatDuration(test.duration)}
+                          </span>
+                          <span className="inline-flex items-center">
+                            <HelpCircle className="mr-1.5 h-4 w-4" />
+                            {test.questionCount ?? 0} questions
+                          </span>
+                          <span className="inline-flex items-center">
+                            <Users className="mr-1.5 h-4 w-4" />
+                            {test.stats.total} invited · {test.stats.completed} completed
+                          </span>
                         </div>
                       </div>
                     </a>
@@ -163,13 +161,13 @@ export function TestsList() {
             })}
           </ul>
         ) : (
-          <div className="px-4 py-5 sm:py-6 text-center">
-            <p className="text-sm text-muted-foreground mb-3 sm:mb-4">
+          <div className="px-3 py-4 sm:px-4 sm:py-6 text-center">
+            <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">
               You haven't created any tests yet.
             </p>
-            <Button asChild size="sm">
+            <Button asChild size="sm" className="h-8 text-xs sm:h-9 sm:text-sm">
               <Link href="/tests/create">
-                <Plus className="mr-1.5 h-4 w-4" />
+                <Plus className="mr-1.5 h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 Create Your First Test
               </Link>
             </Button>

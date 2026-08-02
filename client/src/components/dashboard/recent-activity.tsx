@@ -43,7 +43,6 @@ function dedupeActivities(activities: Activity[]): Activity[] {
 
 function compactTime(date: string): string {
   const relative = getRelativeTime(date);
-  // Avoid the long absolute fallback on mobile cards
   if (relative.includes(",")) {
     const d = new Date(date);
     return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
@@ -61,14 +60,14 @@ export function RecentActivity() {
   if (isLoading) {
     return (
       <Card>
-        <CardHeader className="p-4 pb-3 sm:p-6 sm:pb-4">
-          <CardTitle className="text-base sm:text-lg font-medium">Recent Activity</CardTitle>
+        <CardHeader className="px-3 py-2.5 sm:p-6 sm:pb-4">
+          <CardTitle className="text-[13px] sm:text-lg font-medium">Recent Activity</CardTitle>
         </CardHeader>
-        <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
-          <div className="space-y-3">
+        <CardContent className="px-3 pb-3 pt-0 sm:p-6 sm:pt-0">
+          <div className="space-y-2.5">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="space-y-2">
-                <Skeleton className="h-4 w-36" />
+              <div key={i} className="space-y-1.5">
+                <Skeleton className="h-3.5 w-28" />
                 <Skeleton className="h-3 w-full" />
               </div>
             ))}
@@ -81,11 +80,11 @@ export function RecentActivity() {
   if (error) {
     return (
       <Card>
-        <CardHeader className="p-4 pb-3 sm:p-6 sm:pb-4">
-          <CardTitle className="text-base sm:text-lg font-medium">Recent Activity</CardTitle>
+        <CardHeader className="px-3 py-2.5 sm:p-6 sm:pb-4">
+          <CardTitle className="text-[13px] sm:text-lg font-medium">Recent Activity</CardTitle>
         </CardHeader>
-        <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
-          <p className="text-sm text-destructive">
+        <CardContent className="px-3 pb-3 pt-0 sm:p-6 sm:pt-0">
+          <p className="text-xs text-destructive">
             Error loading recent activity: {(error as Error).message}
           </p>
         </CardContent>
@@ -95,54 +94,60 @@ export function RecentActivity() {
 
   return (
     <Card>
-      <CardHeader className="p-4 pb-3 sm:p-6 sm:pb-4">
-        <CardTitle className="text-base sm:text-lg font-medium">Recent Activity</CardTitle>
+      <CardHeader className="px-3 py-2.5 sm:p-6 sm:pb-4">
+        <CardTitle className="text-[13px] sm:text-lg font-medium">Recent Activity</CardTitle>
       </CardHeader>
-      <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
+      <CardContent className="px-3 pb-3 pt-0 sm:p-6 sm:pt-0">
         {activities && activities.length > 0 ? (
           <ul className="divide-y divide-border">
             {activities.map((activity, index) => (
               <li
                 key={`${activity.candidateId}-${index}`}
-                className={cn("py-3 first:pt-0 last:pb-0", "sm:py-3.5")}
+                className="py-2.5 first:pt-0 last:pb-0 sm:py-3.5"
               >
-                {/* Mobile: stacked. Desktop: side-by-side */}
-                <div className="flex items-start gap-2.5">
+                <div className="flex items-start gap-2">
                   <div
                     className={cn(
-                      "mt-1.5 h-2 w-2 rounded-full shrink-0",
+                      "mt-1 h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full shrink-0",
                       activity.action === "completed" ? "bg-emerald-500" : "bg-amber-500"
                     )}
                   />
-                  <div className="min-w-0 flex-1 space-y-1">
+                  <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-2">
-                      <p className="text-sm font-medium truncate">{activity.candidateName}</p>
+                      <p className="text-[13px] sm:text-sm font-medium truncate leading-tight">
+                        {activity.candidateName}
+                      </p>
                       {activity.action === "completed" && (
                         <Badge
                           variant={activity.autoSubmitted ? "destructive" : "success"}
-                          className="shrink-0 text-[10px] sm:text-xs px-1.5 py-0 h-5"
+                          className="shrink-0 text-[9px] sm:text-xs px-1.5 py-0 h-4 sm:h-5 font-medium"
                         >
                           {activity.autoSubmitted
-                            ? "Auto-submitted"
-                            : `Score ${activity.score}%`}
+                            ? "Auto"
+                            : `${activity.score}%`}
                         </Badge>
                       )}
                       {activity.action === "started" && (
-                        <Badge variant="secondary" className="shrink-0 text-[10px] sm:text-xs px-1.5 py-0 h-5">
-                          In progress
+                        <Badge
+                          variant="secondary"
+                          className="shrink-0 text-[9px] sm:text-xs px-1.5 py-0 h-4 sm:h-5"
+                        >
+                          Live
                         </Badge>
                       )}
                     </div>
 
-                    <p className="text-xs text-muted-foreground">
-                      {activity.action === "completed" ? "Completed" : "Started"}
+                    <p className="text-[11px] sm:text-sm text-muted-foreground truncate mt-0.5 leading-snug">
+                      <span className="sm:hidden">
+                        {activity.action === "completed" ? "Done" : "Started"} · {activity.testTitle}
+                      </span>
+                      <span className="hidden sm:inline">
+                        {activity.action === "completed" ? "Completed" : "Started"}{" "}
+                        <span className="text-foreground/80">"{activity.testTitle}"</span>
+                      </span>
                     </p>
 
-                    <p className="text-sm text-foreground/90 truncate" title={activity.testTitle}>
-                      {activity.testTitle}
-                    </p>
-
-                    <p className="text-[11px] sm:text-xs text-muted-foreground">
+                    <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5">
                       <span className="sm:hidden">{compactTime(activity.timestamp)}</span>
                       <span className="hidden sm:inline">{getRelativeTime(activity.timestamp)}</span>
                     </p>
@@ -152,7 +157,7 @@ export function RecentActivity() {
             ))}
           </ul>
         ) : (
-          <p className="text-sm text-muted-foreground">No recent activity found</p>
+          <p className="text-xs sm:text-sm text-muted-foreground">No recent activity found</p>
         )}
       </CardContent>
     </Card>
