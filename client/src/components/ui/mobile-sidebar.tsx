@@ -55,15 +55,15 @@ const MobileSidebar = () => {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <div className="lg:hidden fixed top-0 left-0 z-40 w-full bg-card border-b border-border">
-        <div className="flex items-center justify-between h-14 px-4">
+        <div className="flex items-center justify-between h-14 px-3 sm:px-4">
           <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground">
-              <Layers className="h-4 w-4" />
+            <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center text-primary-foreground">
+              <Layers className="h-3.5 w-3.5" />
             </div>
-            <span className="text-lg font-bold">HireCheck</span>
+            <span className="text-base font-bold">HireCheck</span>
           </div>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" className="h-9 w-9">
               <Menu className="h-5 w-5" />
               <span className="sr-only">Toggle menu</span>
             </Button>

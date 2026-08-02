@@ -35,32 +35,47 @@ export default function Dashboard() {
         </Button>
       }
     >
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-4 sm:mb-6">
         <StatsCard
-          title="Active Tests"
+          title={
+            <>
+              <span className="sm:hidden">Active</span>
+              <span className="hidden sm:inline">Active Tests</span>
+            </>
+          }
           value={stats?.activeTests || 0}
-          icon={<FileQuestion className="h-6 w-6" />}
+          icon={<FileQuestion className="h-4 w-4 sm:h-6 sm:w-6" />}
           accentColor="border-l-indigo-500"
         />
         <StatsCard
-          title="Pending Assessments"
+          title={
+            <>
+              <span className="sm:hidden">Pending</span>
+              <span className="hidden sm:inline">Pending Assessments</span>
+            </>
+          }
           value={stats?.pendingAssessments || 0}
-          icon={<Users className="h-6 w-6" />}
+          icon={<Users className="h-4 w-4 sm:h-6 sm:w-6" />}
           accentColor="border-l-amber-500"
         />
         <StatsCard
-          title="Completions"
+          title={
+            <>
+              <span className="sm:hidden">Done</span>
+              <span className="hidden sm:inline">Completions</span>
+            </>
+          }
           value={stats?.completedTests || 0}
-          icon={<BarChart className="h-6 w-6" />}
+          icon={<BarChart className="h-4 w-4 sm:h-6 sm:w-6" />}
           accentColor="border-l-emerald-500"
         />
       </div>
 
-      <div className="mb-6">
+      <div className="mb-4 sm:mb-6">
         <RecentActivity />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
         <PendingInvites />
         <PerformanceChart />
         <QuickStats />

@@ -16,7 +16,6 @@ type Activity = {
   autoSubmitted?: boolean;
 };
 
-/** One row per candidate+test: prefer completed over started. */
 function dedupeActivities(activities: Activity[]): Activity[] {
   const byKey = new Map<string, Activity>();
 
@@ -27,7 +26,6 @@ function dedupeActivities(activities: Activity[]): Activity[] {
       byKey.set(key, activity);
       continue;
     }
-    // Prefer completed; if same action, keep the newer timestamp
     if (activity.action === "completed" && existing.action !== "completed") {
       byKey.set(key, activity);
     } else if (
@@ -43,6 +41,16 @@ function dedupeActivities(activities: Activity[]): Activity[] {
   );
 }
 
+function compactTime(date: string): string {
+  const relative = getRelativeTime(date);
+  // Avoid the long absolute fallback on mobile cards
+  if (relative.includes(",")) {
+    const d = new Date(date);
+    return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  }
+  return relative;
+}
+
 export function RecentActivity() {
   const { data: rawActivities, isLoading, error } = useQuery<Activity[]>({
     queryKey: ["/api/dashboard/recent-activity"],
@@ -53,18 +61,15 @@ export function RecentActivity() {
   if (isLoading) {
     return (
       <Card>
-        <CardHeader>
-          <CardTitle className="text-lg font-medium">Recent Activity</CardTitle>
+        <CardHeader className="p-4 pb-3 sm:p-6 sm:pb-4">
+          <CardTitle className="text-base sm:text-lg font-medium">Recent Activity</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
+        <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
+          <div className="space-y-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="flex gap-3">
-                <Skeleton className="h-3 w-3 rounded-full mt-1.5 shrink-0" />
-                <div className="flex-1 space-y-1">
-                  <Skeleton className="h-4 w-48" />
-                  <Skeleton className="h-3 w-32" />
-                </div>
+              <div key={i} className="space-y-2">
+                <Skeleton className="h-4 w-36" />
+                <Skeleton className="h-3 w-full" />
               </div>
             ))}
           </div>
@@ -76,10 +81,10 @@ export function RecentActivity() {
   if (error) {
     return (
       <Card>
-        <CardHeader>
-          <CardTitle className="text-lg font-medium">Recent Activity</CardTitle>
+        <CardHeader className="p-4 pb-3 sm:p-6 sm:pb-4">
+          <CardTitle className="text-base sm:text-lg font-medium">Recent Activity</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
           <p className="text-sm text-destructive">
             Error loading recent activity: {(error as Error).message}
           </p>
@@ -90,57 +95,62 @@ export function RecentActivity() {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="text-lg font-medium">Recent Activity</CardTitle>
+      <CardHeader className="p-4 pb-3 sm:p-6 sm:pb-4">
+        <CardTitle className="text-base sm:text-lg font-medium">Recent Activity</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
         {activities && activities.length > 0 ? (
-          <div className="relative">
-            <div className="absolute left-[5px] top-2 bottom-2 w-px bg-border" />
-            <ul className="space-y-4">
-              {activities.map((activity, index) => (
-                <li key={`${activity.candidateId}-${index}`} className="relative pl-6">
+          <ul className="divide-y divide-border">
+            {activities.map((activity, index) => (
+              <li
+                key={`${activity.candidateId}-${index}`}
+                className={cn("py-3 first:pt-0 last:pb-0", "sm:py-3.5")}
+              >
+                {/* Mobile: stacked. Desktop: side-by-side */}
+                <div className="flex items-start gap-2.5">
                   <div
                     className={cn(
-                      "absolute left-0 top-1.5 h-2.5 w-2.5 rounded-full border-2 border-background",
-                      activity.action === "completed"
-                        ? "bg-emerald-500"
-                        : "bg-amber-500"
+                      "mt-1.5 h-2 w-2 rounded-full shrink-0",
+                      activity.action === "completed" ? "bg-emerald-500" : "bg-amber-500"
                     )}
                   />
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="min-w-0">
-                      <p className="text-sm font-medium">{activity.candidateName}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {activity.action === "completed" ? "Completed" : "Started"}{" "}
-                        <span className="text-foreground/80">"{activity.testTitle}"</span>
-                      </p>
-                    </div>
-                    <div className="flex flex-col items-end shrink-0">
-                      <span className="text-xs text-muted-foreground">
-                        {getRelativeTime(activity.timestamp)}
-                      </span>
+                  <div className="min-w-0 flex-1 space-y-1">
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-sm font-medium truncate">{activity.candidateName}</p>
                       {activity.action === "completed" && (
                         <Badge
                           variant={activity.autoSubmitted ? "destructive" : "success"}
-                          className="mt-1"
+                          className="shrink-0 text-[10px] sm:text-xs px-1.5 py-0 h-5"
                         >
                           {activity.autoSubmitted
                             ? "Auto-submitted"
-                            : `Score: ${activity.score}%`}
+                            : `Score ${activity.score}%`}
                         </Badge>
                       )}
                       {activity.action === "started" && (
-                        <Badge variant="secondary" className="mt-1">
-                          In Progress
+                        <Badge variant="secondary" className="shrink-0 text-[10px] sm:text-xs px-1.5 py-0 h-5">
+                          In progress
                         </Badge>
                       )}
                     </div>
+
+                    <p className="text-xs text-muted-foreground">
+                      {activity.action === "completed" ? "Completed" : "Started"}
+                    </p>
+
+                    <p className="text-sm text-foreground/90 truncate" title={activity.testTitle}>
+                      {activity.testTitle}
+                    </p>
+
+                    <p className="text-[11px] sm:text-xs text-muted-foreground">
+                      <span className="sm:hidden">{compactTime(activity.timestamp)}</span>
+                      <span className="hidden sm:inline">{getRelativeTime(activity.timestamp)}</span>
+                    </p>
                   </div>
-                </li>
-              ))}
-            </ul>
-          </div>
+                </div>
+              </li>
+            ))}
+          </ul>
         ) : (
           <p className="text-sm text-muted-foreground">No recent activity found</p>
         )}

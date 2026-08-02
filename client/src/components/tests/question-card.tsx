@@ -6,7 +6,17 @@ import { toast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Edit, Trash2 } from "lucide-react";
 
 export type QuestionType = "multipleChoice" | "coding" | "subjective";
@@ -26,10 +36,21 @@ interface QuestionCardProps {
 }
 
 export function QuestionCard(props: QuestionCardProps) {
-  const { id, testId, type, content, codeSnippet, options, answer, testCases, evaluationGuidelines, points } = props;
+  const {
+    id,
+    testId,
+    type,
+    content,
+    codeSnippet,
+    options,
+    answer,
+    testCases,
+    evaluationGuidelines,
+    points,
+  } = props;
   const queryClient = useQueryClient();
   const [isEditing, setIsEditing] = useState(false);
-  
+
   const deleteQuestionMutation = useMutation({
     mutationFn: async () => {
       const res = await apiRequest("DELETE", `/api/questions/${id}`, {});
@@ -37,9 +58,7 @@ export function QuestionCard(props: QuestionCardProps) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`/api/tests/${testId}`] });
-      toast({
-        title: "Question deleted successfully",
-      });
+      toast({ title: "Question deleted successfully" });
     },
     onError: (error: any) => {
       toast({
@@ -47,13 +66,13 @@ export function QuestionCard(props: QuestionCardProps) {
         description: error.message || "An error occurred while deleting the question",
         variant: "destructive",
       });
-    }
+    },
   });
-  
+
   function getBadgeVariant(type: QuestionType) {
     switch (type) {
       case "multipleChoice":
-        return "primary";
+        return "default";
       case "coding":
         return "secondary";
       case "subjective":
@@ -62,8 +81,21 @@ export function QuestionCard(props: QuestionCardProps) {
         return "default";
     }
   }
-  
+
   function getTypeLabel(type: QuestionType) {
+    switch (type) {
+      case "multipleChoice":
+        return "MCQ";
+      case "coding":
+        return "Coding";
+      case "subjective":
+        return "Subjective";
+      default:
+        return type;
+    }
+  }
+
+  function getTypeLabelFull(type: QuestionType) {
     switch (type) {
       case "multipleChoice":
         return "Multiple Choice";
@@ -78,35 +110,48 @@ export function QuestionCard(props: QuestionCardProps) {
 
   return (
     <>
-      <Card className="bg-gray-50 border border-gray-200">
-        <CardContent className="p-4">
-          <div className="flex justify-between items-start">
-            <div className="flex items-center">
-              <Badge variant={getBadgeVariant(type)} className="mr-2">
-                {getTypeLabel(type)}
-              </Badge>
-              <h4 className="text-base font-medium text-gray-900">{content}</h4>
+      <Card className="bg-muted/40 border border-border/60">
+        <CardContent className="p-3 sm:p-4">
+          <div className="flex items-start justify-between gap-2">
+            <div className="min-w-0 flex-1 space-y-1.5">
+              <div className="flex items-center gap-2 flex-wrap">
+                <Badge variant={getBadgeVariant(type)} className="text-[10px] sm:text-xs shrink-0">
+                  <span className="sm:hidden">{getTypeLabel(type)}</span>
+                  <span className="hidden sm:inline">{getTypeLabelFull(type)}</span>
+                </Badge>
+                <span className="text-[10px] sm:text-xs text-muted-foreground">
+                  {points} pt{points !== 1 ? "s" : ""}
+                </span>
+              </div>
+              <h4 className="text-sm font-medium text-foreground leading-snug line-clamp-3 sm:line-clamp-none">
+                {content}
+              </h4>
             </div>
-            <div className="flex space-x-2">
-              <Button variant="ghost" size="icon" onClick={() => setIsEditing(true)}>
-                <Edit className="h-4 w-4 text-gray-500" />
+            <div className="flex shrink-0">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={() => setIsEditing(true)}
+              >
+                <Edit className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
               </Button>
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <Trash2 className="h-4 w-4 text-red-500" />
+                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-red-500" />
                   </Button>
                 </AlertDialogTrigger>
-                <AlertDialogContent>
+                <AlertDialogContent className="max-w-[calc(100%-2rem)] sm:max-w-lg rounded-lg">
                   <AlertDialogHeader>
                     <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                     <AlertDialogDescription>
                       This action cannot be undone. This will permanently delete the question.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
-                  <AlertDialogFooter>
+                  <AlertDialogFooter className="flex-col-reverse sm:flex-row gap-2">
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction 
+                    <AlertDialogAction
                       className="bg-red-500 hover:bg-red-600"
                       onClick={() => deleteQuestionMutation.mutate()}
                     >
@@ -117,28 +162,28 @@ export function QuestionCard(props: QuestionCardProps) {
               </AlertDialog>
             </div>
           </div>
-          
+
           {codeSnippet && (
-            <div className="mt-2 bg-gray-100 p-3 rounded text-sm text-gray-800 font-mono">
-              {codeSnippet}
+            <div className="mt-2 bg-muted p-2.5 sm:p-3 rounded text-xs sm:text-sm text-foreground font-mono overflow-x-auto">
+              <pre className="whitespace-pre-wrap break-words">{codeSnippet}</pre>
             </div>
           )}
-          
+
           {type === "multipleChoice" && options && (
-            <div className="mt-3 space-y-2">
+            <div className="mt-2.5 space-y-1.5">
               {options.map((option, index) => (
-                <div key={index} className="flex items-center">
-                  <input 
-                    type="radio" 
-                    id={`q${id}-option${index}`} 
-                    name={`q${id}-options`} 
-                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300" 
+                <div key={index} className="flex items-start gap-2">
+                  <input
+                    type="radio"
+                    id={`q${id}-option${index}`}
+                    name={`q${id}-options`}
+                    className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary"
                     defaultChecked={answer === index.toString()}
                     disabled
                   />
-                  <label 
-                    htmlFor={`q${id}-option${index}`} 
-                    className="ml-3 block text-sm font-medium text-gray-700"
+                  <label
+                    htmlFor={`q${id}-option${index}`}
+                    className="text-xs sm:text-sm text-muted-foreground leading-snug"
                   >
                     {option}
                   </label>
@@ -146,35 +191,31 @@ export function QuestionCard(props: QuestionCardProps) {
               ))}
             </div>
           )}
-          
+
           {type === "coding" && testCases && (
-            <div className="mt-3 bg-gray-100 p-3 rounded text-sm text-gray-800">
-              <div className="flex items-center mb-2">
-                <span className="font-medium">Test Cases:</span>
-              </div>
-              <div className="text-xs font-mono">
+            <div className="mt-2.5 bg-muted p-2.5 sm:p-3 rounded text-xs text-foreground">
+              <div className="font-medium mb-1.5 text-[11px] sm:text-xs">Test Cases</div>
+              <div className="font-mono space-y-1 overflow-x-auto">
                 {testCases.map((testCase, index) => (
-                  <div key={index}>
-                    Input: {testCase.input} → Output: {testCase.output}
+                  <div key={index} className="break-all">
+                    In: {testCase.input} → Out: {testCase.output}
                   </div>
                 ))}
               </div>
             </div>
           )}
-          
+
           {type === "subjective" && evaluationGuidelines && (
-            <div className="mt-3 bg-gray-100 p-3 rounded text-sm text-gray-800">
-              <div className="font-medium mb-1">Evaluation Guidelines:</div>
-              <div className="whitespace-pre-line text-xs">{evaluationGuidelines}</div>
+            <div className="mt-2.5 bg-muted p-2.5 sm:p-3 rounded text-xs text-foreground">
+              <div className="font-medium mb-1 text-[11px] sm:text-xs">Evaluation Guidelines</div>
+              <div className="whitespace-pre-line text-[11px] sm:text-xs text-muted-foreground">
+                {evaluationGuidelines}
+              </div>
             </div>
           )}
-          
-          <div className="mt-2 text-xs text-gray-500 text-right">
-            Points: {points}
-          </div>
         </CardContent>
       </Card>
-      
+
       {isEditing && (
         <QuestionForm
           testId={testId}

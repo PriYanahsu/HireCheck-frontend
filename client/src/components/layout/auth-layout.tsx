@@ -43,14 +43,16 @@ export function AuthLayout({ children }: AuthLayoutProps) {
         </ul>
       </div>
 
-      <div className="flex-1 flex flex-col items-center justify-center px-4 py-12 sm:px-6 lg:px-8 app-main">
-        <div className="lg:hidden mb-8 flex items-center gap-2">
-          <div className="h-9 w-9 rounded-lg bg-primary flex items-center justify-center text-primary-foreground">
-            <Layers className="h-5 w-5" />
+      <div className="flex-1 flex flex-col items-center justify-center px-5 py-8 sm:px-6 sm:py-12 lg:px-8 app-main">
+        <div className="w-full max-w-sm sm:max-w-md">
+          <div className="lg:hidden mb-6 flex items-center justify-center gap-2.5">
+            <div className="h-9 w-9 rounded-lg bg-primary flex items-center justify-center text-primary-foreground">
+              <Layers className="h-5 w-5" />
+            </div>
+            <span className="text-xl font-bold text-foreground">HireCheck</span>
           </div>
-          <span className="text-xl font-bold text-foreground">HireCheck</span>
+          {children}
         </div>
-        <div className="w-full max-w-md">{children}</div>
       </div>
     </div>
   );

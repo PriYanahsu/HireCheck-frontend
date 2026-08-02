@@ -55,10 +55,10 @@ export default function Signup() {
 
   return (
     <AuthLayout>
-      <div className="space-y-6">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">Create your account</h2>
-          <p className="mt-1.5 text-sm text-muted-foreground">
+      <div className="space-y-5 sm:space-y-6">
+        <div className="text-center sm:text-left">
+          <h2 className="text-xl sm:text-2xl font-bold tracking-tight">Create your account</h2>
+          <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed">
             Already have one?{" "}
             <Link href="/login">
               <a className="font-medium text-primary hover:underline">Sign in</a>
@@ -67,19 +67,24 @@ export default function Signup() {
         </div>
 
         <Card className="surface-card border-0 shadow-md">
-          <CardContent className="pt-6">
+          <CardContent className="pt-5 px-4 sm:pt-6 sm:px-6">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                 <FormField
                   control={form.control}
                   name="name"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Full Name</FormLabel>
+                    <FormItem className="space-y-1.5">
+                      <FormLabel className="text-[13px] sm:text-sm">Full Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="John Doe" className="h-10" {...field} />
+                        <Input
+                          placeholder="John Doe"
+                          className="h-11 text-[15px] sm:text-sm"
+                          autoComplete="name"
+                          {...field}
+                        />
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="text-xs" />
                     </FormItem>
                   )}
                 />
@@ -88,27 +93,38 @@ export default function Signup() {
                   control={form.control}
                   name="email"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
+                    <FormItem className="space-y-1.5">
+                      <FormLabel className="text-[13px] sm:text-sm">Email</FormLabel>
                       <FormControl>
-                        <Input type="email" placeholder="john@example.com" className="h-10" {...field} />
+                        <Input
+                          type="email"
+                          placeholder="john@example.com"
+                          className="h-11 text-[15px] sm:text-sm"
+                          autoComplete="email"
+                          {...field}
+                        />
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="text-xs" />
                     </FormItem>
                   )}
                 />
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
                     name="username"
                     render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Username</FormLabel>
+                      <FormItem className="space-y-1.5">
+                        <FormLabel className="text-[13px] sm:text-sm">Username</FormLabel>
                         <FormControl>
-                          <Input placeholder="johndoe" className="h-10" {...field} />
+                          <Input
+                            placeholder="johndoe"
+                            className="h-11 text-[15px] sm:text-sm"
+                            autoComplete="username"
+                            {...field}
+                          />
                         </FormControl>
-                        <FormMessage />
+                        <FormMessage className="text-xs" />
                       </FormItem>
                     )}
                   />
@@ -117,12 +133,18 @@ export default function Signup() {
                     control={form.control}
                     name="company"
                     render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Company</FormLabel>
+                      <FormItem className="space-y-1.5">
+                        <FormLabel className="text-[13px] sm:text-sm">Company</FormLabel>
                         <FormControl>
-                          <Input type="text" placeholder="Acme Inc." className="h-10" {...field} />
+                          <Input
+                            type="text"
+                            placeholder="Acme Inc."
+                            className="h-11 text-[15px] sm:text-sm"
+                            autoComplete="organization"
+                            {...field}
+                          />
                         </FormControl>
-                        <FormMessage />
+                        <FormMessage className="text-xs" />
                       </FormItem>
                     )}
                   />
@@ -132,12 +154,18 @@ export default function Signup() {
                   control={form.control}
                   name="password"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
+                    <FormItem className="space-y-1.5">
+                      <FormLabel className="text-[13px] sm:text-sm">Password</FormLabel>
                       <FormControl>
-                        <Input type="password" placeholder="Create a password" className="h-10" {...field} />
+                        <Input
+                          type="password"
+                          placeholder="Create a password"
+                          className="h-11 text-[15px] sm:text-sm"
+                          autoComplete="new-password"
+                          {...field}
+                        />
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="text-xs" />
                     </FormItem>
                   )}
                 />
@@ -146,17 +174,23 @@ export default function Signup() {
                   control={form.control}
                   name="passwordConfirm"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Confirm Password</FormLabel>
+                    <FormItem className="space-y-1.5">
+                      <FormLabel className="text-[13px] sm:text-sm">Confirm Password</FormLabel>
                       <FormControl>
-                        <Input type="password" placeholder="Confirm password" className="h-10" {...field} />
+                        <Input
+                          type="password"
+                          placeholder="Confirm password"
+                          className="h-11 text-[15px] sm:text-sm"
+                          autoComplete="new-password"
+                          {...field}
+                        />
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="text-xs" />
                     </FormItem>
                   )}
                 />
 
-                <Button type="submit" className="w-full h-11 mt-2" disabled={isSigningUp}>
+                <Button type="submit" className="w-full h-11 mt-1" disabled={isSigningUp}>
                   {isSigningUp ? "Creating account..." : "Create account"}
                 </Button>
               </form>

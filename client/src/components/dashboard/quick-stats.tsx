@@ -37,25 +37,25 @@ export function QuickStats() {
 
   return (
     <Card className="h-full">
-      <CardHeader>
-        <CardTitle className="text-base font-medium">Pipeline Summary</CardTitle>
+      <CardHeader className="p-4 pb-3 sm:p-6 sm:pb-4">
+        <CardTitle className="text-sm sm:text-base font-medium">Pipeline Summary</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
         {isLoading ? (
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {[1, 2, 3].map((i) => (
-              <Skeleton key={i} className="h-10 w-full" />
+              <Skeleton key={i} className="h-9 w-full" />
             ))}
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {items.map((item) => (
-              <div key={item.label} className="flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <item.icon className={`h-4 w-4 ${item.color}`} />
-                  <span className="text-sm text-muted-foreground">{item.label}</span>
+              <div key={item.label} className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 min-w-0">
+                  <item.icon className={`h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 ${item.color}`} />
+                  <span className="text-xs sm:text-sm text-muted-foreground truncate">{item.label}</span>
                 </div>
-                <span className="text-lg font-semibold">{item.value}</span>
+                <span className="text-base sm:text-lg font-semibold shrink-0">{item.value}</span>
               </div>
             ))}
           </div>

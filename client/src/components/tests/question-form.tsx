@@ -24,7 +24,6 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Trash2, Plus } from "lucide-react";
 import { FileUpload } from "@/components/ui/file-upload";
 
-// Extend the schema with client-side validation
 const questionFormSchema = insertQuestionSchema.extend({
   type: z.enum(["multipleChoice", "coding", "subjective", "patternRecognition"], {
     required_error: "Please select a question type",
@@ -59,7 +58,7 @@ export function QuestionForm({ testId, questionId, defaultValues, onClose }: Que
     defaultValues?.testCases as any[] || [{ input: "", output: "" }]
   );
   const [imageUrl, setImageUrl] = useState<string>(defaultValues?.imageUrl || "");
-  
+
   const form = useForm<QuestionFormValues>({
     resolver: zodResolver(questionFormSchema),
     defaultValues: {
@@ -74,9 +73,9 @@ export function QuestionForm({ testId, questionId, defaultValues, onClose }: Que
       imageUrl: defaultValues?.imageUrl || "",
       points: defaultValues?.points || 1,
       order: defaultValues?.order || 0,
-    }
+    },
   });
-  
+
   const createQuestionMutation = useMutation({
     mutationFn: async (data: QuestionFormValues) => {
       const res = await apiRequest("POST", "/api/questions", data);
@@ -84,9 +83,7 @@ export function QuestionForm({ testId, questionId, defaultValues, onClose }: Que
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`/api/tests/${testId}`] });
-      toast({
-        title: "Question added successfully",
-      });
+      toast({ title: "Question added successfully" });
       onClose();
     },
     onError: (error: any) => {
@@ -95,9 +92,9 @@ export function QuestionForm({ testId, questionId, defaultValues, onClose }: Que
         description: error.message || "An error occurred while adding the question",
         variant: "destructive",
       });
-    }
+    },
   });
-  
+
   const updateQuestionMutation = useMutation({
     mutationFn: async (data: QuestionFormValues) => {
       const res = await apiRequest("PUT", `/api/questions/${questionId}`, data);
@@ -105,9 +102,7 @@ export function QuestionForm({ testId, questionId, defaultValues, onClose }: Que
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`/api/tests/${testId}`] });
-      toast({
-        title: "Question updated successfully",
-      });
+      toast({ title: "Question updated successfully" });
       onClose();
     },
     onError: (error: any) => {
@@ -116,25 +111,25 @@ export function QuestionForm({ testId, questionId, defaultValues, onClose }: Que
         description: error.message || "An error occurred while updating the question",
         variant: "destructive",
       });
-    }
+    },
   });
-  
+
   function handleQuestionTypeChange(value: string) {
     setQuestionType(value);
     form.setValue("type", value as any);
   }
-  
+
   function handleOptionChange(index: number, value: string) {
     const newOptions = [...options];
     newOptions[index] = value;
     setOptions(newOptions);
     form.setValue("options", newOptions);
   }
-  
+
   function addOption() {
     setOptions([...options, ""]);
   }
-  
+
   function removeOption(index: number) {
     if (options.length <= 2) {
       toast({
@@ -144,29 +139,28 @@ export function QuestionForm({ testId, questionId, defaultValues, onClose }: Que
       });
       return;
     }
-    
+
     const newOptions = options.filter((_, i) => i !== index);
     setOptions(newOptions);
     form.setValue("options", newOptions);
-    
-    // If the correct answer index is now out of bounds, reset it to 0
+
     const currentAnswer = form.getValues("answer");
     if (currentAnswer && parseInt(currentAnswer as string) >= newOptions.length) {
       form.setValue("answer", "0");
     }
   }
-  
-  function handleTestCaseChange(index: number, field: 'input' | 'output', value: string) {
+
+  function handleTestCaseChange(index: number, field: "input" | "output", value: string) {
     const newTestCases = [...testCases];
     newTestCases[index][field] = value;
     setTestCases(newTestCases);
     form.setValue("testCases", newTestCases);
   }
-  
+
   function addTestCase() {
     setTestCases([...testCases, { input: "", output: "" }]);
   }
-  
+
   function removeTestCase(index: number) {
     if (testCases.length <= 1) {
       toast({
@@ -176,36 +170,23 @@ export function QuestionForm({ testId, questionId, defaultValues, onClose }: Que
       });
       return;
     }
-    
+
     const newTestCases = testCases.filter((_, i) => i !== index);
     setTestCases(newTestCases);
     form.setValue("testCases", newTestCases);
   }
-  
+
   function onSubmit(data: QuestionFormValues) {
-    // Prepare the data based on question type
-    const questionData = {
-      ...data,
-      testId,
-    };
-    
+    const questionData = { ...data, testId };
+
     if (questionData.type !== "multipleChoice" && questionData.type !== "patternRecognition") {
       delete questionData.options;
       delete questionData.answer;
     }
-    
-    if (questionData.type !== "coding") {
-      delete questionData.testCases;
-    }
-    
-    if (questionData.type !== "subjective") {
-      delete questionData.evaluationGuidelines;
-    }
-    
-    if (questionData.type !== "patternRecognition") {
-      delete questionData.imageUrl;
-    }
-    
+    if (questionData.type !== "coding") delete questionData.testCases;
+    if (questionData.type !== "subjective") delete questionData.evaluationGuidelines;
+    if (questionData.type !== "patternRecognition") delete questionData.imageUrl;
+
     if (questionId) {
       updateQuestionMutation.mutate(questionData);
     } else {
@@ -215,19 +196,22 @@ export function QuestionForm({ testId, questionId, defaultValues, onClose }: Que
 
   return (
     <Dialog open onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-2xl">
-        <DialogHeader>
-          <DialogTitle>{questionId ? "Edit Question" : "Add Question"}</DialogTitle>
+      <DialogContent className="w-[calc(100%-1rem)] max-w-lg sm:max-w-2xl p-0 gap-0 max-h-[92dvh] overflow-hidden flex flex-col rounded-xl">
+        <DialogHeader className="p-4 pb-3 sm:p-6 sm:pb-4 border-b shrink-0">
+          <DialogTitle className="text-base sm:text-lg pr-6">
+            {questionId ? "Edit Question" : "Add Question"}
+          </DialogTitle>
         </DialogHeader>
-        <div style={{ maxHeight: '70vh', overflowY: 'auto' }}>
+
+        <div className="flex-1 overflow-y-auto overscroll-contain px-4 py-3 sm:px-6 sm:py-4">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form id="question-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 sm:space-y-5">
               <FormField
                 control={form.control}
                 name="type"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Question Type</FormLabel>
+                  <FormItem className="space-y-1.5">
+                    <FormLabel className="text-[13px] sm:text-sm">Question Type</FormLabel>
                     <Select
                       defaultValue={field.value}
                       onValueChange={(value) => {
@@ -236,7 +220,7 @@ export function QuestionForm({ testId, questionId, defaultValues, onClose }: Que
                       }}
                     >
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="h-10 text-[15px] sm:text-sm">
                           <SelectValue placeholder="Select a question type" />
                         </SelectTrigger>
                       </FormControl>
@@ -247,162 +231,158 @@ export function QuestionForm({ testId, questionId, defaultValues, onClose }: Que
                         <SelectItem value="patternRecognition">Pattern Recognition</SelectItem>
                       </SelectContent>
                     </Select>
-                    <FormMessage />
+                    <FormMessage className="text-xs" />
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="content"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Question</FormLabel>
+                  <FormItem className="space-y-1.5">
+                    <FormLabel className="text-[13px] sm:text-sm">Question</FormLabel>
                     <FormControl>
-                      <Textarea 
+                      <Textarea
                         placeholder="Enter the question text"
+                        className="text-[15px] sm:text-sm min-h-[72px]"
+                        rows={3}
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-xs" />
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="points"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Points</FormLabel>
+                  <FormItem className="space-y-1.5">
+                    <FormLabel className="text-[13px] sm:text-sm">Points</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
+                        inputMode="numeric"
+                        className="h-10 text-[15px] sm:text-sm w-full sm:max-w-[140px]"
                         {...field}
                         onChange={(e) => field.onChange(parseInt(e.target.value) || 1)}
                         value={field.value}
                       />
                     </FormControl>
-                    <FormDescription>
-                      The number of points awarded for correctly answering this question
+                    <FormDescription className="text-[11px] sm:text-sm">
+                      Points awarded for a correct answer
                     </FormDescription>
-                    <FormMessage />
+                    <FormMessage className="text-xs" />
                   </FormItem>
                 )}
               />
-              
+
               {questionType === "multipleChoice" && (
-                <>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <FormLabel>Options</FormLabel>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={addOption}
-                      >
-                        <Plus className="h-4 w-4 mr-2" />
-                        Add Option
-                      </Button>
-                    </div>
-                    <FormField
-                      control={form.control}
-                      name="answer"
-                      render={({ field }) => (
-                        <FormItem>
-                          <RadioGroup
-                            value={field.value}
-                            onValueChange={field.onChange}
-                            className="space-y-2"
-                          >
-                            {options.map((option, index) => (
-                              <div key={index} className="flex items-center space-x-2">
-                                <RadioGroupItem value={index.toString()} id={`option-${index}`} />
-                                <Input
-                                  value={option}
-                                  onChange={(e) => handleOptionChange(index, e.target.value)}
-                                  placeholder={`Option ${index + 1}`}
-                                  className="flex-1"
-                                />
-                                <Button
-                                  type="button"
-                                  variant="ghost"
-                                  size="icon"
-                                  onClick={() => removeOption(index)}
-                                >
-                                  <Trash2 className="h-4 w-4 text-red-500" />
-                                </Button>
-                              </div>
-                            ))}
-                          </RadioGroup>
-                          <FormDescription>
-                            Select the correct answer
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <FormLabel className="text-[13px] sm:text-sm">Options</FormLabel>
+                    <Button type="button" variant="outline" size="sm" className="h-8 text-xs" onClick={addOption}>
+                      <Plus className="h-3.5 w-3.5 mr-1" />
+                      Add
+                    </Button>
                   </div>
-                </>
+                  <FormField
+                    control={form.control}
+                    name="answer"
+                    render={({ field }) => (
+                      <FormItem>
+                        <RadioGroup
+                          value={field.value}
+                          onValueChange={field.onChange}
+                          className="space-y-2"
+                        >
+                          {options.map((option, index) => (
+                            <div key={index} className="flex items-center gap-2">
+                              <RadioGroupItem value={index.toString()} id={`option-${index}`} className="shrink-0" />
+                              <Input
+                                value={option}
+                                onChange={(e) => handleOptionChange(index, e.target.value)}
+                                placeholder={`Option ${index + 1}`}
+                                className="flex-1 h-9 text-[15px] sm:text-sm min-w-0"
+                              />
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                className="h-9 w-9 shrink-0"
+                                onClick={() => removeOption(index)}
+                              >
+                                <Trash2 className="h-4 w-4 text-red-500" />
+                              </Button>
+                            </div>
+                          ))}
+                        </RadioGroup>
+                        <FormDescription className="text-[11px] sm:text-sm">
+                          Select the correct answer
+                        </FormDescription>
+                        <FormMessage className="text-xs" />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               )}
-              
+
               {questionType === "coding" && (
                 <>
                   <FormField
                     control={form.control}
                     name="codeSnippet"
                     render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Code Snippet (Optional)</FormLabel>
+                      <FormItem className="space-y-1.5">
+                        <FormLabel className="text-[13px] sm:text-sm">Code Snippet (Optional)</FormLabel>
                         <FormControl>
-                          <Textarea 
-                            placeholder="function example() {\n  // Your code here\n}"
-                            className="font-mono"
+                          <Textarea
+                            placeholder={"function example() {\n  // Your code here\n}"}
+                            className="font-mono text-xs sm:text-sm min-h-[88px]"
                             rows={4}
                             {...field}
                           />
                         </FormControl>
-                        <FormDescription>
-                          Initial code snippet for the candidate to work with
+                        <FormDescription className="text-[11px] sm:text-sm">
+                          Starter code for the candidate
                         </FormDescription>
-                        <FormMessage />
+                        <FormMessage className="text-xs" />
                       </FormItem>
                     )}
                   />
-                  
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <FormLabel>Test Cases</FormLabel>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={addTestCase}
-                      >
-                        <Plus className="h-4 w-4 mr-2" />
-                        Add Test Case
+
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between gap-2">
+                      <FormLabel className="text-[13px] sm:text-sm">Test Cases</FormLabel>
+                      <Button type="button" variant="outline" size="sm" className="h-8 text-xs" onClick={addTestCase}>
+                        <Plus className="h-3.5 w-3.5 mr-1" />
+                        Add
                       </Button>
                     </div>
-                    
+
                     {testCases.map((testCase, index) => (
-                      <div key={index} className="flex items-start space-x-2">
-                        <div className="space-y-2 flex-1">
+                      <div key={index} className="flex items-start gap-2 rounded-lg border p-2.5 sm:p-0 sm:border-0">
+                        <div className="space-y-2 flex-1 min-w-0">
                           <Input
                             value={testCase.input}
-                            onChange={(e) => handleTestCaseChange(index, 'input', e.target.value)}
+                            onChange={(e) => handleTestCaseChange(index, "input", e.target.value)}
                             placeholder="Input"
+                            className="h-9 text-[15px] sm:text-sm"
                           />
                           <Input
                             value={testCase.output}
-                            onChange={(e) => handleTestCaseChange(index, 'output', e.target.value)}
+                            onChange={(e) => handleTestCaseChange(index, "output", e.target.value)}
                             placeholder="Expected Output"
+                            className="h-9 text-[15px] sm:text-sm"
                           />
                         </div>
                         <Button
                           type="button"
                           variant="ghost"
                           size="icon"
+                          className="h-9 w-9 shrink-0"
                           onClick={() => removeTestCase(index)}
                         >
                           <Trash2 className="h-4 w-4 text-red-500" />
@@ -412,40 +392,41 @@ export function QuestionForm({ testId, questionId, defaultValues, onClose }: Que
                   </div>
                 </>
               )}
-              
+
               {questionType === "subjective" && (
                 <FormField
                   control={form.control}
                   name="evaluationGuidelines"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Evaluation Guidelines</FormLabel>
+                    <FormItem className="space-y-1.5">
+                      <FormLabel className="text-[13px] sm:text-sm">Evaluation Guidelines</FormLabel>
                       <FormControl>
-                        <Textarea 
-                          placeholder="e.g. Understanding of concepts (3 points)\nClarity of explanation (3 points)\nRelevant examples (4 points)"
+                        <Textarea
+                          placeholder="e.g. Understanding (3 pts)&#10;Clarity (3 pts)&#10;Examples (4 pts)"
                           rows={4}
+                          className="text-[15px] sm:text-sm"
                           {...field}
                         />
                       </FormControl>
-                      <FormDescription>
-                        Guidelines for evaluating the subjective response
+                      <FormDescription className="text-[11px] sm:text-sm">
+                        Guidelines for evaluating the response
                       </FormDescription>
-                      <FormMessage />
+                      <FormMessage className="text-xs" />
                     </FormItem>
                   )}
                 />
               )}
-              
+
               {questionType === "patternRecognition" && (
                 <>
                   <FormField
                     control={form.control}
                     name="imageUrl"
                     render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Pattern Image</FormLabel>
+                      <FormItem className="space-y-1.5">
+                        <FormLabel className="text-[13px] sm:text-sm">Pattern Image</FormLabel>
                         <FormControl>
-                          <FileUpload 
+                          <FileUpload
                             onUploadComplete={(url) => {
                               field.onChange(url);
                               setImageUrl(url);
@@ -454,37 +435,33 @@ export function QuestionForm({ testId, questionId, defaultValues, onClose }: Que
                             label="Upload Pattern Sequence Image"
                           />
                         </FormControl>
-                        <FormDescription>
+                        <FormDescription className="text-[11px] sm:text-sm">
                           Upload an image showing the pattern sequence
                         </FormDescription>
-                        <FormMessage />
+                        <FormMessage className="text-xs" />
                       </FormItem>
                     )}
                   />
                   {imageUrl && (
-                    <div className="mt-2 p-4 border rounded-md">
-                      <p className="text-sm font-medium mb-2">Image Preview:</p>
-                      <img 
-                        src={imageUrl} 
-                        alt="Pattern sequence" 
-                        className="max-w-full h-auto max-h-[200px] object-contain border rounded-md" 
-                        onError={(e) => { 
-                          (e.target as HTMLImageElement).src = "https://placehold.co/600x400?text=Invalid+Image+URL";
-                        }} 
+                    <div className="p-3 border rounded-md">
+                      <p className="text-xs font-medium mb-2">Preview</p>
+                      <img
+                        src={imageUrl}
+                        alt="Pattern sequence"
+                        className="max-w-full h-auto max-h-[160px] object-contain border rounded-md"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src =
+                            "https://placehold.co/600x400?text=Invalid+Image+URL";
+                        }}
                       />
                     </div>
                   )}
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <FormLabel>Pattern Options</FormLabel>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={addOption}
-                      >
-                        <Plus className="h-4 w-4 mr-2" />
-                        Add Option
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between gap-2">
+                      <FormLabel className="text-[13px] sm:text-sm">Pattern Options</FormLabel>
+                      <Button type="button" variant="outline" size="sm" className="h-8 text-xs" onClick={addOption}>
+                        <Plus className="h-3.5 w-3.5 mr-1" />
+                        Add
                       </Button>
                     </div>
                     <FormField
@@ -498,18 +475,23 @@ export function QuestionForm({ testId, questionId, defaultValues, onClose }: Que
                             className="space-y-2"
                           >
                             {options.map((option, index) => (
-                              <div key={index} className="flex items-center space-x-2">
-                                <RadioGroupItem value={index.toString()} id={`pattern-option-${index}`} />
+                              <div key={index} className="flex items-center gap-2">
+                                <RadioGroupItem
+                                  value={index.toString()}
+                                  id={`pattern-option-${index}`}
+                                  className="shrink-0"
+                                />
                                 <Input
                                   value={option}
                                   onChange={(e) => handleOptionChange(index, e.target.value)}
                                   placeholder={`Option ${index + 1}`}
-                                  className="flex-1"
+                                  className="flex-1 h-9 text-[15px] sm:text-sm min-w-0"
                                 />
                                 <Button
                                   type="button"
                                   variant="ghost"
                                   size="icon"
+                                  className="h-9 w-9 shrink-0"
                                   onClick={() => removeOption(index)}
                                 >
                                   <Trash2 className="h-4 w-4 text-red-500" />
@@ -517,38 +499,37 @@ export function QuestionForm({ testId, questionId, defaultValues, onClose }: Que
                               </div>
                             ))}
                           </RadioGroup>
-                          <FormDescription>
-                            Enter the possible next patterns as text and select the correct one
+                          <FormDescription className="text-[11px] sm:text-sm">
+                            Enter options and select the correct one
                           </FormDescription>
-                          <FormMessage />
+                          <FormMessage className="text-xs" />
                         </FormItem>
                       )}
                     />
                   </div>
                 </>
               )}
-              
-              <DialogFooter>
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  onClick={onClose}
-                >
-                  Cancel
-                </Button>
-                <Button 
-                  type="submit"
-                  disabled={createQuestionMutation.isPending || updateQuestionMutation.isPending}
-                >
-                  {createQuestionMutation.isPending || updateQuestionMutation.isPending ? 
-                    "Saving..." : 
-                    (questionId ? "Update Question" : "Add Question")
-                  }
-                </Button>
-              </DialogFooter>
             </form>
           </Form>
         </div>
+
+        <DialogFooter className="p-3 sm:p-4 border-t shrink-0 gap-2 bg-background">
+          <Button type="button" variant="outline" className="h-10 sm:h-9" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            form="question-form"
+            className="h-10 sm:h-9"
+            disabled={createQuestionMutation.isPending || updateQuestionMutation.isPending}
+          >
+            {createQuestionMutation.isPending || updateQuestionMutation.isPending
+              ? "Saving..."
+              : questionId
+                ? "Update Question"
+                : "Add Question"}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

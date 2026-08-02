@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -11,7 +10,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -21,7 +19,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-// Extend the schema with client-side validation
 const testFormSchema = insertTestSchema.extend({
   title: z.string().min(3, "Title must be at least 3 characters"),
   description: z.string().optional(),
@@ -30,7 +27,6 @@ const testFormSchema = insertTestSchema.extend({
   shuffleQuestions: z.boolean().default(false),
 });
 
-// Remove the createdBy field as it will be added on the server
 type TestFormValues = Omit<z.infer<typeof testFormSchema>, "createdBy">;
 
 interface TestFormProps {
@@ -42,7 +38,7 @@ interface TestFormProps {
 export function TestForm({ defaultValues, testId, onQuestionPhase }: TestFormProps) {
   const [, setLocation] = useLocation();
   const queryClient = useQueryClient();
-  
+
   const form = useForm<TestFormValues>({
     resolver: zodResolver(testFormSchema.omit({ createdBy: true })),
     defaultValues: defaultValues || {
@@ -53,7 +49,7 @@ export function TestForm({ defaultValues, testId, onQuestionPhase }: TestFormPro
       shuffleQuestions: false,
     },
   });
-  
+
   const createTestMutation = useMutation({
     mutationFn: async (data: TestFormValues) => {
       const res = await apiRequest("POST", "/api/tests", data);
@@ -61,12 +57,10 @@ export function TestForm({ defaultValues, testId, onQuestionPhase }: TestFormPro
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["/api/tests"] });
-      
       toast({
         title: "Test created successfully",
-        description: "Now let's add some questions to your test."
+        description: "Now let's add some questions to your test.",
       });
-      
       if (onQuestionPhase) {
         onQuestionPhase(data.id);
       } else {
@@ -79,9 +73,9 @@ export function TestForm({ defaultValues, testId, onQuestionPhase }: TestFormPro
         description: error.message || "An error occurred while creating the test",
         variant: "destructive",
       });
-    }
+    },
   });
-  
+
   const updateTestMutation = useMutation({
     mutationFn: async (data: TestFormValues) => {
       const res = await apiRequest("PUT", `/api/tests/${testId}`, data);
@@ -90,11 +84,7 @@ export function TestForm({ defaultValues, testId, onQuestionPhase }: TestFormPro
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/tests"] });
       queryClient.invalidateQueries({ queryKey: [`/api/tests/${testId}`] });
-      
-      toast({
-        title: "Test updated successfully",
-      });
-      
+      toast({ title: "Test updated successfully" });
       if (onQuestionPhase && testId) {
         onQuestionPhase(testId);
       }
@@ -105,7 +95,7 @@ export function TestForm({ defaultValues, testId, onQuestionPhase }: TestFormPro
         description: error.message || "An error occurred while updating the test",
         variant: "destructive",
       });
-    }
+    },
   });
 
   function onSubmit(data: TestFormValues) {
@@ -122,99 +112,108 @@ export function TestForm({ defaultValues, testId, onQuestionPhase }: TestFormPro
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
         <div>
-          <h3 className="text-lg font-medium leading-6 text-gray-900">Test Details</h3>
-          <p className="mt-1 text-sm text-gray-500">
+          <h3 className="text-sm sm:text-lg font-medium leading-6 text-gray-900">Test Details</h3>
+          <p className="mt-0.5 sm:mt-1 text-xs sm:text-sm text-muted-foreground">
             Set up the basic information for your assessment.
           </p>
         </div>
-        
-        <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+
+        <div className="grid grid-cols-1 gap-3.5 sm:gap-y-6 sm:gap-x-4 sm:grid-cols-6">
           <FormField
             control={form.control}
             name="title"
             render={({ field }) => (
-              <FormItem className="sm:col-span-4">
-                <FormLabel>Test Title</FormLabel>
+              <FormItem className="sm:col-span-4 space-y-1.5">
+                <FormLabel className="text-[13px] sm:text-sm">Test Title</FormLabel>
                 <FormControl>
-                  <Input placeholder="e.g. Frontend Developer Assessment" {...field} />
+                  <Input
+                    placeholder="e.g. Frontend Developer Assessment"
+                    className="h-10 text-[15px] sm:text-sm"
+                    {...field}
+                  />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-xs" />
               </FormItem>
             )}
           />
-          
+
           <FormField
             control={form.control}
             name="description"
             render={({ field }) => (
-              <FormItem className="sm:col-span-6">
-                <FormLabel>Description</FormLabel>
+              <FormItem className="sm:col-span-6 space-y-1.5">
+                <FormLabel className="text-[13px] sm:text-sm">Description</FormLabel>
                 <FormControl>
-                  <Textarea 
-                    placeholder="Describe what this test is evaluating and any special instructions..." 
-                    rows={3} 
-                    {...field} 
+                  <Textarea
+                    placeholder="Describe what this test evaluates..."
+                    rows={3}
+                    className="text-[15px] sm:text-sm resize-y min-h-[80px]"
+                    {...field}
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-xs" />
               </FormItem>
             )}
           />
-          
+
           <FormField
             control={form.control}
             name="duration"
             render={({ field }) => (
-              <FormItem className="sm:col-span-2">
-                <FormLabel>Duration (minutes)</FormLabel>
+              <FormItem className="sm:col-span-2 space-y-1.5">
+                <FormLabel className="text-[13px] sm:text-sm">Duration (minutes)</FormLabel>
                 <FormControl>
-                  <Input 
-                    type="number" 
+                  <Input
+                    type="number"
+                    inputMode="numeric"
                     placeholder="60"
+                    className="h-10 text-[15px] sm:text-sm"
                     {...field}
                     onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
                     value={field.value}
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-xs" />
               </FormItem>
             )}
           />
-          
+
           <FormField
             control={form.control}
             name="passingScore"
             render={({ field }) => (
-              <FormItem className="sm:col-span-2">
-                <FormLabel>Passing Score (%)</FormLabel>
+              <FormItem className="sm:col-span-2 space-y-1.5">
+                <FormLabel className="text-[13px] sm:text-sm">Passing Score (%)</FormLabel>
                 <FormControl>
-                  <Input 
-                    type="number" 
+                  <Input
+                    type="number"
+                    inputMode="numeric"
                     placeholder="70"
+                    className="h-10 text-[15px] sm:text-sm"
                     {...field}
                     onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
                     value={field.value}
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-xs" />
               </FormItem>
             )}
           />
-          
+
           <FormField
             control={form.control}
             name="shuffleQuestions"
             render={({ field }) => (
-              <FormItem className="sm:col-span-2">
-                <FormLabel>Shuffle Questions</FormLabel>
+              <FormItem className="sm:col-span-2 space-y-1.5">
+                <FormLabel className="text-[13px] sm:text-sm">Shuffle Questions</FormLabel>
                 <Select
                   onValueChange={(value) => field.onChange(value === "true")}
                   defaultValue={field.value ? "true" : "false"}
                 >
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger className="h-10 text-[15px] sm:text-sm">
                       <SelectValue placeholder="Select" />
                     </SelectTrigger>
                   </FormControl>
@@ -223,21 +222,26 @@ export function TestForm({ defaultValues, testId, onQuestionPhase }: TestFormPro
                     <SelectItem value="false">No</SelectItem>
                   </SelectContent>
                 </Select>
-                <FormMessage />
+                <FormMessage className="text-xs" />
               </FormItem>
             )}
           />
         </div>
-        
-        <div className="flex justify-end space-x-4">
-          <Button type="button" variant="outline" onClick={onCancel}>
+
+        <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 sm:gap-3 pt-1">
+          <Button type="button" variant="outline" className="h-10 sm:h-9" onClick={onCancel}>
             Cancel
           </Button>
-          <Button 
-            type="submit" 
+          <Button
+            type="submit"
+            className="h-10 sm:h-9"
             disabled={createTestMutation.isPending || updateTestMutation.isPending}
           >
-            {createTestMutation.isPending || updateTestMutation.isPending ? "Saving..." : (testId ? "Update Test" : "Create Test")}
+            {createTestMutation.isPending || updateTestMutation.isPending
+              ? "Saving..."
+              : testId
+                ? "Update Test"
+                : "Create Test"}
           </Button>
         </div>
       </form>
