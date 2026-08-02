@@ -5,7 +5,7 @@ import { AlertCircle, ArrowLeft } from "lucide-react";
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen w-full flex items-center justify-center app-main px-4">
+    <div className="h-dvh max-h-dvh w-full app-scroll flex items-center justify-center app-main px-4">
       <Card className="w-full max-w-md surface-card">
         <CardContent className="pt-8 pb-8 text-center">
           <div className="mx-auto h-14 w-14 rounded-2xl bg-destructive/10 flex items-center justify-center mb-4">

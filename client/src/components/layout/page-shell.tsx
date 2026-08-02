@@ -10,11 +10,11 @@ type PageShellProps = {
 
 export function PageShell({ title, subtitle, action, children }: PageShellProps) {
   return (
-    <div className="h-screen overflow-hidden flex">
+    <div className="app-shell">
       <Sidebar />
       <MobileSidebar />
 
-      <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+      <div className="flex-1 flex flex-col min-h-0 min-w-0 overflow-hidden">
         <header className="page-header">
           <div>
             <h1 className="text-xl font-semibold tracking-tight text-foreground">{title}</h1>
@@ -25,7 +25,7 @@ export function PageShell({ title, subtitle, action, children }: PageShellProps)
           {action}
         </header>
 
-        <main className="flex-1 min-h-0 overflow-y-auto app-main pt-14 lg:pt-0">
+        <main className="app-scroll flex-1 min-h-0 app-main pt-14 lg:pt-0">
           <div className="page-content">
             <div className="lg:hidden flex items-center justify-between gap-3 mb-4">
               <div className="min-w-0">
@@ -34,7 +34,11 @@ export function PageShell({ title, subtitle, action, children }: PageShellProps)
                   <p className="text-xs text-muted-foreground mt-0.5 truncate">{subtitle}</p>
                 )}
               </div>
-              {action && <div className="shrink-0 [&_button]:h-8 [&_button]:text-xs [&_button]:px-2.5 [&_a]:h-8 [&_a]:text-xs [&_a]:px-2.5">{action}</div>}
+              {action && (
+                <div className="shrink-0 [&_button]:h-8 [&_button]:text-xs [&_button]:px-2.5 [&_a]:h-8 [&_a]:text-xs [&_a]:px-2.5">
+                  {action}
+                </div>
+              )}
             </div>
             {children}
           </div>

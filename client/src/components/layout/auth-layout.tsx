@@ -12,7 +12,7 @@ const features = [
 
 export function AuthLayout({ children }: AuthLayoutProps) {
   return (
-    <div className="min-h-screen flex">
+    <div className="h-dvh max-h-dvh flex overflow-hidden">
       <div className="auth-panel text-white">
         <div>
           <div className="flex items-center gap-3">
@@ -43,8 +43,8 @@ export function AuthLayout({ children }: AuthLayoutProps) {
         </ul>
       </div>
 
-      <div className="flex-1 flex flex-col items-center justify-center px-5 py-8 sm:px-6 sm:py-12 lg:px-8 app-main">
-        <div className="w-full max-w-sm sm:max-w-md">
+      <div className="flex-1 min-h-0 app-scroll flex flex-col items-center justify-center px-5 py-8 sm:px-6 sm:py-12 lg:px-8 app-main">
+        <div className="w-full max-w-sm sm:max-w-md my-auto">
           <div className="lg:hidden mb-6 flex items-center justify-center gap-2.5">
             <div className="h-9 w-9 rounded-lg bg-primary flex items-center justify-center text-primary-foreground">
               <Layers className="h-5 w-5" />

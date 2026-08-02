@@ -17,7 +17,7 @@ export default function CandidateComplete() {
   });
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center app-main px-4 py-12">
+    <div className="h-dvh max-h-dvh app-scroll flex flex-col items-center justify-center app-main px-4 py-12">
       <Card className="w-full max-w-md surface-card shadow-md">
         <CardContent className="pt-10 pb-8 text-center">
           <div className="mx-auto h-16 w-16 rounded-2xl bg-emerald-100 flex items-center justify-center">

@@ -68,7 +68,7 @@ export default function TestInstructionsScreen({ testData, onStart }: TestInstru
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+    <div className="h-dvh max-h-dvh app-scroll flex items-center justify-center bg-gray-50 p-4">
       <div className="max-w-2xl w-full bg-white rounded-lg shadow-lg p-8">
         <h1 className="text-2xl font-bold text-gray-900 mb-6">Test Instructions</h1>
         

@@ -225,7 +225,7 @@ export default function CandidateTest() {
   
   if (!isRoute) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="h-dvh max-h-dvh app-scroll flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-red-600 mb-2">Invalid Test Link</h1>
           <p className="text-gray-600 mb-4">The test link you are trying to access is invalid or has expired.</p>
@@ -236,7 +236,7 @@ export default function CandidateTest() {
   
   if (sessionError) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="h-dvh max-h-dvh app-scroll flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-red-600 mb-2">Session Error</h1>
           <p className="text-gray-600 mb-4">{sessionError}</p>
@@ -248,7 +248,7 @@ export default function CandidateTest() {
   
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center app-main">
+      <div className="h-dvh max-h-dvh app-scroll flex items-center justify-center app-main">
         <div className="text-center">
           <h1 className="text-xl font-bold text-primary flex items-center justify-center gap-2 mb-4">
             <Layers className="h-7 w-7" />
@@ -271,7 +271,7 @@ export default function CandidateTest() {
       errorMessage = "The test link you are trying to access is invalid or has expired.";
     }
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="h-dvh max-h-dvh app-scroll flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-red-600 mb-2">{errorTitle}</h1>
           <p className="text-gray-600 mb-4">{errorMessage}</p>
@@ -292,7 +292,7 @@ export default function CandidateTest() {
   // Show fullscreen warning if test is started but not in fullscreen
   if (testData.startedAt && !isFullscreen) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="h-dvh max-h-dvh app-scroll flex items-center justify-center bg-gray-50">
         <div className="text-center p-8 bg-white rounded-lg shadow-lg max-w-md">
           <h1 className="text-2xl font-bold text-red-600 mb-4">Fullscreen Required</h1>
           <p className="text-gray-600 mb-6">
@@ -313,7 +313,7 @@ export default function CandidateTest() {
   const currentQuestion = testData.questions[currentQuestionIndex];
   
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="h-dvh max-h-dvh flex flex-col overflow-hidden bg-background">
       {/* Warning Dialog */}
       {showWarning && minimizeCount < 6 && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -340,7 +340,7 @@ export default function CandidateTest() {
       )}
 
       {/* Header */}
-      <header className="bg-card border-b border-border/60 backdrop-blur-sm sticky top-0 z-10">
+      <header className="bg-card border-b border-border/60 shrink-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14">
             <div className="flex items-center gap-2">
@@ -381,7 +381,7 @@ export default function CandidateTest() {
       </header>
       
       {/* Main content */}
-      <main className="flex-1 pb-8">
+      <main className="app-scroll flex-1 min-h-0 pb-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* <QuestionNavigation
             totalQuestions={testData.questions.length}

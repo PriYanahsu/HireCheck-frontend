@@ -40,7 +40,7 @@ export default function EditTest() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+      <div className="h-dvh max-h-dvh app-scroll flex items-center justify-center bg-gray-50 px-4">
         <div className="text-center">
           <h1 className="text-lg sm:text-2xl font-bold text-red-600 mb-2">Error</h1>
           <p className="text-sm text-gray-600 mb-4">
@@ -58,11 +58,11 @@ export default function EditTest() {
   }
 
   return (
-    <div className="h-screen overflow-hidden flex">
+    <div className="app-shell">
       <Sidebar />
       <MobileSidebar />
 
-      <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+      <div className="flex-1 flex flex-col min-h-0 min-w-0 overflow-hidden">
         <header className="hidden lg:flex shrink-0 items-center justify-between h-16 bg-white border-b border-gray-200 px-6">
           <div className="flex items-center space-x-2 min-w-0">
             <Button variant="ghost" size="icon" asChild>
@@ -79,7 +79,7 @@ export default function EditTest() {
           </Button>
         </header>
 
-        <main className="flex-1 min-h-0 overflow-y-auto bg-gray-50 pt-14 lg:pt-0">
+        <main className="app-scroll flex-1 min-h-0 bg-gray-50 pt-14 lg:pt-0">
           <div className="py-4 px-3 sm:py-6 sm:px-6 lg:px-8 max-w-4xl mx-auto w-full">
             {isLoading ? (
               <div className="text-center py-10 text-sm text-muted-foreground">
