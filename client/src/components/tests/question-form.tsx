@@ -220,7 +220,7 @@ export function QuestionForm({ testId, questionId, defaultValues, onClose }: Que
                       }}
                     >
                       <FormControl>
-                        <SelectTrigger className="h-10 text-[15px] sm:text-sm">
+                        <SelectTrigger className="h-10 !text-[14px] sm:!text-sm">
                           <SelectValue placeholder="Select a question type" />
                         </SelectTrigger>
                       </FormControl>
@@ -245,7 +245,7 @@ export function QuestionForm({ testId, questionId, defaultValues, onClose }: Que
                     <FormControl>
                       <Textarea
                         placeholder="Enter the question text"
-                        className="text-[15px] sm:text-sm min-h-[72px]"
+                        className="min-h-[72px] !text-[14px] sm:!text-sm"
                         rows={3}
                         {...field}
                       />
@@ -265,7 +265,7 @@ export function QuestionForm({ testId, questionId, defaultValues, onClose }: Que
                       <Input
                         type="number"
                         inputMode="numeric"
-                        className="h-10 text-[15px] sm:text-sm w-full sm:max-w-[140px]"
+                        className="h-10 w-full !text-[14px] sm:max-w-[140px] sm:!text-sm"
                         {...field}
                         onChange={(e) => field.onChange(parseInt(e.target.value) || 1)}
                         value={field.value}
@@ -305,7 +305,7 @@ export function QuestionForm({ testId, questionId, defaultValues, onClose }: Que
                                 value={option}
                                 onChange={(e) => handleOptionChange(index, e.target.value)}
                                 placeholder={`Option ${index + 1}`}
-                                className="flex-1 h-9 text-[15px] sm:text-sm min-w-0"
+                                className="h-9 min-w-0 flex-1 !text-[14px] sm:!text-sm"
                               />
                               <Button
                                 type="button"
@@ -369,13 +369,13 @@ export function QuestionForm({ testId, questionId, defaultValues, onClose }: Que
                             value={testCase.input}
                             onChange={(e) => handleTestCaseChange(index, "input", e.target.value)}
                             placeholder="Input"
-                            className="h-9 text-[15px] sm:text-sm"
+                            className="h-9 !text-[14px] sm:!text-sm"
                           />
                           <Input
                             value={testCase.output}
                             onChange={(e) => handleTestCaseChange(index, "output", e.target.value)}
                             placeholder="Expected Output"
-                            className="h-9 text-[15px] sm:text-sm"
+                            className="h-9 !text-[14px] sm:!text-sm"
                           />
                         </div>
                         <Button
@@ -404,7 +404,7 @@ export function QuestionForm({ testId, questionId, defaultValues, onClose }: Que
                         <Textarea
                           placeholder="e.g. Understanding (3 pts)&#10;Clarity (3 pts)&#10;Examples (4 pts)"
                           rows={4}
-                          className="text-[15px] sm:text-sm"
+                          className="!text-[14px] sm:!text-sm"
                           {...field}
                         />
                       </FormControl>
@@ -485,7 +485,7 @@ export function QuestionForm({ testId, questionId, defaultValues, onClose }: Que
                                   value={option}
                                   onChange={(e) => handleOptionChange(index, e.target.value)}
                                   placeholder={`Option ${index + 1}`}
-                                  className="flex-1 h-9 text-[15px] sm:text-sm min-w-0"
+                                  className="h-9 min-w-0 flex-1 !text-[14px] sm:!text-sm"
                                 />
                                 <Button
                                   type="button"

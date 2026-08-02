@@ -99,7 +99,13 @@ export function RecentActivity() {
       </CardHeader>
       <CardContent className="px-3 pb-3 pt-0 sm:p-6 sm:pt-0">
         {activities && activities.length > 0 ? (
-          <ul className="divide-y divide-border">
+          <ul
+            className={cn(
+              "divide-y divide-border",
+              activities.length > 3 &&
+                "max-h-[12.75rem] overflow-y-auto overscroll-contain sm:max-h-[16.5rem]"
+            )}
+          >
             {activities.map((activity, index) => (
               <li
                 key={`${activity.candidateId}-${index}`}

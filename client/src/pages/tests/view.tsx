@@ -259,70 +259,74 @@ export default function ViewTest() {
               </div>
             ) : (
               <>
-                <div className="flex items-center gap-2 mb-4 lg:hidden min-w-0">
+                <div className="mb-3 flex min-w-0 items-center gap-2 lg:hidden">
                   <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" asChild>
                     <Link href="/tests">
                       <ArrowLeft className="h-4 w-4" />
                     </Link>
                   </Button>
-                  <h1 className="text-base font-semibold text-gray-900 truncate">{typedTest?.title}</h1>
+                  <h1 className="min-w-0 truncate text-[13px] font-semibold text-gray-900">
+                    {typedTest?.title}
+                  </h1>
                 </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-6 mb-4 sm:mb-6">
-                  <Card className="md:col-span-2">
-                    <CardHeader className="p-3 sm:p-6">
-                      <CardTitle className="text-sm sm:text-lg">Test Information</CardTitle>
+
+                <div className="mb-3 grid grid-cols-1 gap-3 md:mb-6 md:grid-cols-3 md:gap-6">
+                  <Card className="min-w-0 md:col-span-2">
+                    <CardHeader className="px-3 py-2.5 sm:p-6">
+                      <CardTitle className="text-[13px] font-medium sm:text-lg">
+                        Test Information
+                      </CardTitle>
                       {typedTest.description && (
-                        <CardDescription className="text-xs sm:text-sm">
+                        <CardDescription className="line-clamp-2 text-[11px] sm:line-clamp-none sm:text-sm">
                           {typedTest.description}
                         </CardDescription>
                       )}
                     </CardHeader>
-                    <CardContent className="p-3 pt-0 sm:p-6 sm:pt-0">
-                      <dl className="divide-y divide-gray-200">
-                        <div className="py-2.5 sm:py-3 grid grid-cols-3 gap-2">
-                          <dt className="text-xs sm:text-sm font-medium text-gray-500 flex items-center">
-                            <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 text-gray-400" />
+                    <CardContent className="px-3 pb-3 pt-0 sm:p-6 sm:pt-0">
+                      <dl className="divide-y divide-border">
+                        <div className="grid grid-cols-3 gap-2 py-2 sm:py-3">
+                          <dt className="flex items-center text-[11px] font-medium text-muted-foreground sm:text-sm">
+                            <Clock className="mr-1 h-3.5 w-3.5 shrink-0 text-muted-foreground/70 sm:h-4 sm:w-4" />
                             Duration
                           </dt>
-                          <dd className="text-xs sm:text-sm text-gray-900 col-span-2">
+                          <dd className="col-span-2 truncate text-[12px] text-foreground sm:text-sm">
                             {formatDuration(typedTest.duration)}
                           </dd>
                         </div>
-                        <div className="py-2.5 sm:py-3 grid grid-cols-3 gap-2">
-                          <dt className="text-xs sm:text-sm font-medium text-gray-500 flex items-center">
-                            <CheckCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 text-gray-400" />
+                        <div className="grid grid-cols-3 gap-2 py-2 sm:py-3">
+                          <dt className="flex items-center text-[11px] font-medium text-muted-foreground sm:text-sm">
+                            <CheckCircle className="mr-1 h-3.5 w-3.5 shrink-0 text-muted-foreground/70 sm:h-4 sm:w-4" />
                             Passing
                           </dt>
-                          <dd className="text-xs sm:text-sm text-gray-900 col-span-2">
+                          <dd className="col-span-2 text-[12px] text-foreground sm:text-sm">
                             {typedTest.passingScore}%
                           </dd>
                         </div>
-                        <div className="py-2.5 sm:py-3 grid grid-cols-3 gap-2">
-                          <dt className="text-xs sm:text-sm font-medium text-gray-500 flex items-center">
-                            <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 text-gray-400" />
+                        <div className="grid grid-cols-3 gap-2 py-2 sm:py-3">
+                          <dt className="flex items-center text-[11px] font-medium text-muted-foreground sm:text-sm">
+                            <Calendar className="mr-1 h-3.5 w-3.5 shrink-0 text-muted-foreground/70 sm:h-4 sm:w-4" />
                             Created
                           </dt>
-                          <dd className="text-xs sm:text-sm text-gray-900 col-span-2">
+                          <dd className="col-span-2 truncate text-[12px] text-foreground sm:text-sm">
                             {formatDate(typedTest.createdAt)}
                           </dd>
                         </div>
-                        <div className="py-2.5 sm:py-3 grid grid-cols-3 gap-2">
-                          <dt className="text-xs sm:text-sm font-medium text-gray-500 flex items-center">
-                            <Users className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 text-gray-400" />
+                        <div className="grid grid-cols-3 gap-2 py-2 sm:py-3">
+                          <dt className="flex items-center text-[11px] font-medium text-muted-foreground sm:text-sm">
+                            <Users className="mr-1 h-3.5 w-3.5 shrink-0 text-muted-foreground/70 sm:h-4 sm:w-4" />
                             Questions
                           </dt>
-                          <dd className="text-xs sm:text-sm text-gray-900 col-span-2">
+                          <dd className="col-span-2 text-[12px] text-foreground sm:text-sm">
                             {typedTest.questions?.length || 0} questions
                           </dd>
                         </div>
                       </dl>
-                      
-                      <div className="mt-3 sm:mt-4 grid grid-cols-2 gap-2">
-                        <Button 
+
+                      <div className="mt-2.5 grid grid-cols-2 gap-1.5 sm:mt-4 sm:gap-2">
+                        <Button
                           variant="outline"
                           size="sm"
-                          className="h-8 text-xs sm:h-9 sm:text-sm"
+                          className="h-8 text-[11px] sm:h-9 sm:text-sm"
                           onClick={() => {
                             const url = `${window.location.origin}/public-test/${testId}`;
                             navigator.clipboard.writeText(url);
@@ -332,93 +336,103 @@ export default function ViewTest() {
                             });
                           }}
                         >
-                          <Share2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1" />
+                          <Share2 className="mr-1 h-3.5 w-3.5 sm:h-4 sm:w-4" />
                           Share
                         </Button>
-                        <Button 
+                        <Button
                           variant="outline"
                           size="sm"
-                          className="h-8 text-xs sm:h-9 sm:text-sm"
+                          className="h-8 text-[11px] sm:h-9 sm:text-sm"
                           onClick={() => setIsInviteDialogOpen(true)}
                         >
-                          <Users className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1" />
+                          <Users className="mr-1 h-3.5 w-3.5 sm:h-4 sm:w-4" />
                           Invite
                         </Button>
-                        <Button 
+                        <Button
                           variant="outline"
                           size="sm"
-                          className="h-8 text-xs sm:h-9 sm:text-sm"
+                          className="h-8 text-[11px] sm:h-9 sm:text-sm"
                           onClick={() => setIsBulkInviteDialogOpen(true)}
                         >
-                          <Users className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1" />
+                          <Users className="mr-1 h-3.5 w-3.5 sm:h-4 sm:w-4" />
                           Bulk Invite
                         </Button>
-                        <Button 
+                        <Button
                           variant="outline"
                           size="sm"
-                          className="h-8 text-xs sm:h-9 sm:text-sm"
+                          className="h-8 text-[11px] sm:h-9 sm:text-sm"
                           asChild
                         >
                           <Link href={`/tests/${testId}/edit`}>
-                            <Edit className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1" />
+                            <Edit className="mr-1 h-3.5 w-3.5 sm:h-4 sm:w-4" />
                             Edit
                           </Link>
                         </Button>
                       </div>
                     </CardContent>
                   </Card>
-                  
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Test Statistics</CardTitle>
+
+                  <Card className="min-w-0">
+                    <CardHeader className="px-3 py-2.5 sm:p-6">
+                      <CardTitle className="text-[13px] font-medium sm:text-lg">
+                        Test Statistics
+                      </CardTitle>
                     </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        <div className="flex justify-between items-center p-2 bg-gray-50 rounded-md">
-                          <div className="flex items-center">
-                            <div className="h-10 w-10 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center">
-                              <Users className="h-5 w-5" />
-                            </div>
-                            <div className="ml-3">
-                              <p className="text-sm font-medium text-gray-900">Total Candidates</p>
-                              <p className="text-lg font-semibold text-gray-900">{typedTest.stats?.total || 0}</p>
-                            </div>
+                    <CardContent className="px-3 pb-3 pt-0 sm:p-6 sm:pt-0">
+                      <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-1 sm:gap-4">
+                        <div className="flex items-center rounded-md bg-muted/50 p-2 sm:bg-gray-50">
+                          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-100 text-primary-600 sm:h-10 sm:w-10">
+                            <Users className="h-4 w-4 sm:h-5 sm:w-5" />
+                          </div>
+                          <div className="ml-2 min-w-0 sm:ml-3">
+                            <p className="truncate text-[10px] text-muted-foreground sm:text-sm sm:font-medium sm:text-gray-900">
+                              Total
+                            </p>
+                            <p className="text-[13px] font-semibold tabular-nums sm:text-lg">
+                              {typedTest.stats?.total || 0}
+                            </p>
                           </div>
                         </div>
-                        
-                        <div className="flex justify-between items-center p-2 bg-gray-50 rounded-md">
-                          <div className="flex items-center">
-                            <div className="h-10 w-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
-                              <CheckCircle className="h-5 w-5" />
-                            </div>
-                            <div className="ml-3">
-                              <p className="text-sm font-medium text-gray-900">Completed</p>
-                              <p className="text-lg font-semibold text-gray-900">{typedTest.stats?.completed || 0}</p>
-                            </div>
+
+                        <div className="flex items-center rounded-md bg-muted/50 p-2 sm:bg-gray-50">
+                          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-green-100 text-green-600 sm:h-10 sm:w-10">
+                            <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5" />
+                          </div>
+                          <div className="ml-2 min-w-0 sm:ml-3">
+                            <p className="truncate text-[10px] text-muted-foreground sm:text-sm sm:font-medium sm:text-gray-900">
+                              Completed
+                            </p>
+                            <p className="text-[13px] font-semibold tabular-nums sm:text-lg">
+                              {typedTest.stats?.completed || 0}
+                            </p>
                           </div>
                         </div>
-                        
-                        <div className="flex justify-between items-center p-2 bg-gray-50 rounded-md">
-                          <div className="flex items-center">
-                            <div className="h-10 w-10 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center">
-                              <Clock className="h-5 w-5" />
-                            </div>
-                            <div className="ml-3">
-                              <p className="text-sm font-medium text-gray-900">In Progress</p>
-                              <p className="text-lg font-semibold text-gray-900">{typedTest.stats?.inProgress || 0}</p>
-                            </div>
+
+                        <div className="flex items-center rounded-md bg-muted/50 p-2 sm:bg-gray-50">
+                          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-yellow-100 text-yellow-600 sm:h-10 sm:w-10">
+                            <Clock className="h-4 w-4 sm:h-5 sm:w-5" />
+                          </div>
+                          <div className="ml-2 min-w-0 sm:ml-3">
+                            <p className="truncate text-[10px] text-muted-foreground sm:text-sm sm:font-medium sm:text-gray-900">
+                              In Progress
+                            </p>
+                            <p className="text-[13px] font-semibold tabular-nums sm:text-lg">
+                              {typedTest.stats?.inProgress || 0}
+                            </p>
                           </div>
                         </div>
-                        
-                        <div className="flex justify-between items-center p-2 bg-gray-50 rounded-md">
-                          <div className="flex items-center">
-                            <div className="h-10 w-10 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center">
-                              <Users className="h-5 w-5" />
-                            </div>
-                            <div className="ml-3">
-                              <p className="text-sm font-medium text-gray-900">Average Score</p>
-                              <p className="text-lg font-semibold text-gray-900">{typedTest.stats?.avgScore || 0}%</p>
-                            </div>
+
+                        <div className="flex items-center rounded-md bg-muted/50 p-2 sm:bg-gray-50">
+                          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-600 sm:h-10 sm:w-10">
+                            <Users className="h-4 w-4 sm:h-5 sm:w-5" />
+                          </div>
+                          <div className="ml-2 min-w-0 sm:ml-3">
+                            <p className="truncate text-[10px] text-muted-foreground sm:text-sm sm:font-medium sm:text-gray-900">
+                              Avg Score
+                            </p>
+                            <p className="text-[13px] font-semibold tabular-nums sm:text-lg">
+                              {typedTest.stats?.avgScore || 0}%
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -426,34 +440,45 @@ export default function ViewTest() {
                   </Card>
                 </div>
                 
-                <Card>
-                  <CardHeader className="p-3 sm:p-6">
-                    <CardTitle className="text-sm sm:text-lg">Candidates</CardTitle>
+                <Card className="min-w-0">
+                  <CardHeader className="px-3 py-2.5 sm:p-6">
+                    <CardTitle className="text-[13px] font-medium sm:text-lg">Candidates</CardTitle>
                   </CardHeader>
-                  <CardContent className="p-3 pt-0 sm:p-6 sm:pt-0">
+                  <CardContent className="px-3 pb-3 pt-0 sm:p-6 sm:pt-0">
                     <Tabs defaultValue="all">
-                      <TabsList className="mb-3 sm:mb-4 w-full sm:w-auto grid grid-cols-2 sm:inline-flex h-auto sm:h-9 p-1 gap-1">
-                        <TabsTrigger value="all" className="text-xs sm:text-sm h-8">All</TabsTrigger>
-                        <TabsTrigger value="completed" className="text-xs sm:text-sm h-8">Completed</TabsTrigger>
-                        <TabsTrigger value="in-progress" className="text-xs sm:text-sm h-8">In Progress</TabsTrigger>
-                        <TabsTrigger value="pending" className="text-xs sm:text-sm h-8">Pending</TabsTrigger>
+                      <TabsList className="mb-2 grid h-auto w-full grid-cols-4 gap-0.5 p-0.5 sm:mb-4 sm:inline-flex sm:h-9 sm:w-auto sm:gap-1 sm:p-1">
+                        <TabsTrigger value="all" className="h-8 px-1 text-[11px] sm:px-3 sm:text-sm">
+                          All
+                        </TabsTrigger>
+                        <TabsTrigger value="completed" className="h-8 px-1 text-[11px] sm:px-3 sm:text-sm">
+                          Done
+                        </TabsTrigger>
+                        <TabsTrigger value="in-progress" className="h-8 px-1 text-[11px] sm:px-3 sm:text-sm">
+                          Live
+                        </TabsTrigger>
+                        <TabsTrigger value="pending" className="h-8 px-1 text-[11px] sm:px-3 sm:text-sm">
+                          Pending
+                        </TabsTrigger>
                       </TabsList>
                       
                       <TabsContent value="all" className="mt-0">
                         {candidatesLoading ? (
-                          <div className="text-center py-6 text-sm text-muted-foreground">
+                          <div className="py-6 text-center text-sm text-muted-foreground">
                             Loading candidates...
                           </div>
                         ) : typedCandidates && typedCandidates.length > 0 ? (
                           <>
-                            {/* Mobile cards */}
-                            <ul className="md:hidden divide-y divide-border -mx-3 border-t">
+                            <ul className="-mx-3 divide-y divide-border border-t md:hidden">
                               {typedCandidates.map((candidate: any) => (
-                                <li key={candidate.id} className="px-3 py-3 space-y-1.5">
-                                  <div className="flex items-start justify-between gap-2">
-                                    <div className="min-w-0">
-                                      <p className="text-sm font-medium truncate">{candidate.name}</p>
-                                      <p className="text-xs text-muted-foreground truncate">{candidate.email}</p>
+                                <li key={candidate.id} className="space-y-1 px-2.5 py-2">
+                                  <div className="flex items-start justify-between gap-1.5">
+                                    <div className="min-w-0 flex-1">
+                                      <p className="truncate text-[12px] font-medium leading-tight">
+                                        {candidate.name}
+                                      </p>
+                                      <p className="mt-0.5 truncate text-[10px] leading-tight text-muted-foreground">
+                                        {candidate.email}
+                                      </p>
                                     </div>
                                     <Badge
                                       variant={
@@ -463,7 +488,7 @@ export default function ViewTest() {
                                           ? "secondary"
                                           : "outline"
                                       }
-                                      className="text-[10px] px-1.5 py-0 h-5 shrink-0"
+                                      className="h-4 shrink-0 px-1.5 py-0 text-[9px] sm:h-5 sm:text-xs"
                                     >
                                       {candidate.status === "pending"
                                         ? "Pending"
@@ -472,9 +497,9 @@ export default function ViewTest() {
                                         : "Completed"}
                                     </Badge>
                                   </div>
-                                  <div className="flex items-center justify-between">
-                                    <p className="text-[11px] text-muted-foreground">
-                                      {candidate.score !== undefined ? `Score ${candidate.score}% · ` : ""}
+                                  <div className="flex items-center justify-between gap-2">
+                                    <p className="truncate text-[10px] text-muted-foreground">
+                                      {candidate.score !== undefined ? `${candidate.score}% · ` : ""}
                                       {candidate.invitedAt
                                         ? new Date(candidate.invitedAt).toLocaleDateString("en-US", {
                                             month: "short",
@@ -482,29 +507,29 @@ export default function ViewTest() {
                                           })
                                         : ""}
                                     </p>
-                                    <div className="flex">
+                                    <div className="flex shrink-0">
                                       <Button
                                         variant="ghost"
                                         size="icon"
-                                        className="h-8 w-8"
+                                        className="h-6 w-6"
                                         onClick={() => copyTestLink(candidate.testLink)}
                                       >
-                                        <Copy className="h-3.5 w-3.5" />
+                                        <Copy className="h-3 w-3" />
                                       </Button>
                                       <Button
                                         variant="ghost"
                                         size="icon"
-                                        className="h-8 w-8 text-red-600"
+                                        className="h-6 w-6 text-red-600"
                                         onClick={() => handleDeleteCandidate(candidate.id)}
                                       >
-                                        <Trash2 className="h-3.5 w-3.5" />
+                                        <Trash2 className="h-3 w-3" />
                                       </Button>
                                     </div>
                                   </div>
                                 </li>
                               ))}
                             </ul>
-                            <div className="hidden md:block overflow-x-auto">
+                            <div className="hidden overflow-x-auto md:block">
                           <Table>
                             <TableHeader>
                               <TableRow>
@@ -572,7 +597,7 @@ export default function ViewTest() {
                             </div>
                           </>
                         ) : (
-                          <div className="text-center py-6 text-sm text-muted-foreground">
+                          <div className="py-6 text-center text-sm text-muted-foreground">
                             No candidates found.
                           </div>
                         )}
@@ -580,11 +605,49 @@ export default function ViewTest() {
                       
                       <TabsContent value="completed" className="mt-0">
                         {candidatesLoading ? (
-                          <div className="text-center py-6 text-sm text-muted-foreground">
+                          <div className="py-6 text-center text-sm text-muted-foreground">
                             Loading candidates...
                           </div>
                         ) : typedCandidates?.filter((c: any) => c.status === "completed").length > 0 ? (
-                          <div className="overflow-x-auto">
+                          <>
+                            <ul className="-mx-3 divide-y divide-border border-t md:hidden">
+                              {typedCandidates
+                                .filter((c: any) => c.status === "completed")
+                                .map((candidate: any) => (
+                                  <li key={candidate.id} className="space-y-1 px-2.5 py-2">
+                                    <div className="flex items-start justify-between gap-1.5">
+                                      <div className="min-w-0 flex-1">
+                                        <p className="truncate text-[12px] font-medium leading-tight">
+                                          {candidate.name}
+                                        </p>
+                                        <p className="mt-0.5 truncate text-[10px] text-muted-foreground">
+                                          {candidate.email}
+                                        </p>
+                                      </div>
+                                      <Badge
+                                        variant={
+                                          candidate.score >= (typedTest.passingScore || 70)
+                                            ? "success"
+                                            : "destructive"
+                                        }
+                                        className="h-4 shrink-0 px-1.5 py-0 text-[9px]"
+                                      >
+                                        {candidate.score}%
+                                      </Badge>
+                                    </div>
+                                    <p className="text-[10px] text-muted-foreground">
+                                      Done{" "}
+                                      {candidate.completedAt
+                                        ? new Date(candidate.completedAt).toLocaleDateString("en-US", {
+                                            month: "short",
+                                            day: "numeric",
+                                          })
+                                        : "—"}
+                                    </p>
+                                  </li>
+                                ))}
+                            </ul>
+                            <div className="hidden overflow-x-auto md:block">
                           <Table>
                             <TableHeader>
                               <TableRow>
@@ -629,9 +692,10 @@ export default function ViewTest() {
                               ))}
                             </TableBody>
                           </Table>
-                          </div>
+                            </div>
+                          </>
                         ) : (
-                          <div className="text-center py-6 text-sm text-muted-foreground">
+                          <div className="py-6 text-center text-sm text-muted-foreground">
                             No candidates have completed the test yet.
                           </div>
                         )}
@@ -639,11 +703,62 @@ export default function ViewTest() {
                       
                       <TabsContent value="in-progress" className="mt-0">
                         {candidatesLoading ? (
-                          <div className="text-center py-6 text-sm text-muted-foreground">
+                          <div className="py-6 text-center text-sm text-muted-foreground">
                             Loading candidates...
                           </div>
                         ) : typedCandidates?.filter((c: any) => c.status === "in_progress").length > 0 ? (
-                          <div className="overflow-x-auto">
+                          <>
+                            <ul className="-mx-3 divide-y divide-border border-t md:hidden">
+                              {typedCandidates
+                                .filter((c: any) => c.status === "in_progress")
+                                .map((candidate: any) => (
+                                  <li key={candidate.id} className="space-y-1 px-2.5 py-2">
+                                    <div className="flex items-start justify-between gap-1.5">
+                                      <div className="min-w-0 flex-1">
+                                        <p className="truncate text-[12px] font-medium leading-tight">
+                                          {candidate.name}
+                                        </p>
+                                        <p className="mt-0.5 truncate text-[10px] text-muted-foreground">
+                                          {candidate.email}
+                                        </p>
+                                      </div>
+                                      <Badge variant="secondary" className="h-4 shrink-0 px-1.5 py-0 text-[9px]">
+                                        Live
+                                      </Badge>
+                                    </div>
+                                    <div className="flex items-center justify-between gap-2">
+                                      <p className="text-[10px] text-muted-foreground">
+                                        Started{" "}
+                                        {candidate.startedAt
+                                          ? new Date(candidate.startedAt).toLocaleDateString("en-US", {
+                                              month: "short",
+                                              day: "numeric",
+                                            })
+                                          : "—"}
+                                      </p>
+                                      <div className="flex shrink-0">
+                                        <Button
+                                          variant="ghost"
+                                          size="icon"
+                                          className="h-6 w-6"
+                                          onClick={() => copyTestLink(candidate.testLink)}
+                                        >
+                                          <Copy className="h-3 w-3" />
+                                        </Button>
+                                        <Button
+                                          variant="ghost"
+                                          size="icon"
+                                          className="h-6 w-6 text-red-600"
+                                          onClick={() => handleDeleteCandidate(candidate.id)}
+                                        >
+                                          <Trash2 className="h-3 w-3" />
+                                        </Button>
+                                      </div>
+                                    </div>
+                                  </li>
+                                ))}
+                            </ul>
+                            <div className="hidden overflow-x-auto md:block">
                           <Table>
                             <TableHeader>
                               <TableRow>
@@ -698,9 +813,10 @@ export default function ViewTest() {
                               ))}
                             </TableBody>
                           </Table>
-                          </div>
+                            </div>
+                          </>
                         ) : (
-                          <div className="text-center py-6 text-sm text-muted-foreground">
+                          <div className="py-6 text-center text-sm text-muted-foreground">
                             No candidates are currently taking the test.
                           </div>
                         )}
@@ -708,11 +824,60 @@ export default function ViewTest() {
                       
                       <TabsContent value="pending" className="mt-0">
                         {candidatesLoading ? (
-                          <div className="text-center py-6 text-sm text-muted-foreground">
+                          <div className="py-6 text-center text-sm text-muted-foreground">
                             Loading candidates...
                           </div>
                         ) : typedCandidates?.filter((c: any) => c.status === "pending").length > 0 ? (
-                          <div className="overflow-x-auto">
+                          <>
+                            <ul className="-mx-3 divide-y divide-border border-t md:hidden">
+                              {typedCandidates
+                                .filter((c: any) => c.status === "pending")
+                                .map((candidate: any) => (
+                                  <li key={candidate.id} className="space-y-1 px-2.5 py-2">
+                                    <div className="min-w-0">
+                                      <p className="truncate text-[12px] font-medium leading-tight">
+                                        {candidate.name}
+                                      </p>
+                                      <p className="mt-0.5 truncate text-[10px] text-muted-foreground">
+                                        {candidate.email}
+                                      </p>
+                                    </div>
+                                    <div className="flex items-center justify-between gap-2">
+                                      <p className="text-[10px] text-muted-foreground">
+                                        Invited{" "}
+                                        {new Date(candidate.invitedAt).toLocaleDateString("en-US", {
+                                          month: "short",
+                                          day: "numeric",
+                                        })}
+                                      </p>
+                                      <div className="flex shrink-0">
+                                        <Button
+                                          variant="ghost"
+                                          size="icon"
+                                          className="h-6 w-6"
+                                          onClick={() => copyTestLink(candidate.testLink)}
+                                        >
+                                          <Copy className="h-3 w-3" />
+                                        </Button>
+                                        <Button
+                                          variant="ghost"
+                                          size="icon"
+                                          className="h-6 w-6"
+                                          onClick={() => {
+                                            window.open(
+                                              `mailto:${candidate.email}?subject=Invitation to take a coding test&body=Please take the test at ${window.location.origin}/take-test/${candidate.testLink}`,
+                                              "_blank"
+                                            );
+                                          }}
+                                        >
+                                          <Mail className="h-3 w-3" />
+                                        </Button>
+                                      </div>
+                                    </div>
+                                  </li>
+                                ))}
+                            </ul>
+                            <div className="hidden overflow-x-auto md:block">
                           <Table>
                             <TableHeader>
                               <TableRow>
@@ -758,9 +923,10 @@ export default function ViewTest() {
                               ))}
                             </TableBody>
                           </Table>
-                          </div>
+                            </div>
+                          </>
                         ) : (
-                          <div className="text-center py-6 text-sm text-muted-foreground">
+                          <div className="py-6 text-center text-sm text-muted-foreground">
                             No pending invitations.
                           </div>
                         )}

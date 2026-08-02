@@ -93,12 +93,6 @@ export function TestsList() {
                       {/* Mobile row */}
                       <div className="sm:hidden px-3 py-2">
                         <div className="flex items-center gap-2 min-w-0">
-                          <span
-                            className={cn(
-                              "h-1.5 w-1.5 rounded-full shrink-0",
-                              isActive ? "bg-emerald-500" : "bg-muted-foreground/40"
-                            )}
-                          />
                           <p
                             className="flex-1 min-w-0 text-[12px] font-medium text-foreground truncate leading-tight"
                             title={test.title}
@@ -114,7 +108,7 @@ export function TestsList() {
                             {isActive ? "Active" : "Idle"}
                           </span>
                         </div>
-                        <p className="mt-1 pl-3.5 text-[10px] text-muted-foreground leading-tight tabular-nums">
+                        <p className="mt-1 text-[10px] text-muted-foreground leading-tight tabular-nums">
                           {shortDuration(test.duration)}
                           <span className="mx-1 text-border">·</span>
                           {test.questionCount ?? 0} Q

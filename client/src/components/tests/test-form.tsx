@@ -130,7 +130,7 @@ export function TestForm({ defaultValues, testId, onQuestionPhase }: TestFormPro
                 <FormControl>
                   <Input
                     placeholder="e.g. Frontend Developer Assessment"
-                    className="h-10 text-[15px] sm:text-sm"
+                    className="h-10 !text-[14px] sm:!text-sm"
                     {...field}
                   />
                 </FormControl>
@@ -149,7 +149,7 @@ export function TestForm({ defaultValues, testId, onQuestionPhase }: TestFormPro
                   <Textarea
                     placeholder="Describe what this test evaluates..."
                     rows={3}
-                    className="text-[15px] sm:text-sm resize-y min-h-[80px]"
+                    className="min-h-[80px] resize-y !text-[14px] sm:!text-sm"
                     {...field}
                   />
                 </FormControl>
@@ -169,7 +169,7 @@ export function TestForm({ defaultValues, testId, onQuestionPhase }: TestFormPro
                     type="number"
                     inputMode="numeric"
                     placeholder="60"
-                    className="h-10 text-[15px] sm:text-sm"
+                    className="h-10 !text-[14px] sm:!text-sm"
                     {...field}
                     onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
                     value={field.value}
@@ -191,7 +191,7 @@ export function TestForm({ defaultValues, testId, onQuestionPhase }: TestFormPro
                     type="number"
                     inputMode="numeric"
                     placeholder="70"
-                    className="h-10 text-[15px] sm:text-sm"
+                    className="h-10 !text-[14px] sm:!text-sm"
                     {...field}
                     onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
                     value={field.value}
@@ -213,7 +213,7 @@ export function TestForm({ defaultValues, testId, onQuestionPhase }: TestFormPro
                   defaultValue={field.value ? "true" : "false"}
                 >
                   <FormControl>
-                    <SelectTrigger className="h-10 text-[15px] sm:text-sm">
+                    <SelectTrigger className="h-10 !text-[14px] sm:!text-sm">
                       <SelectValue placeholder="Select" />
                     </SelectTrigger>
                   </FormControl>

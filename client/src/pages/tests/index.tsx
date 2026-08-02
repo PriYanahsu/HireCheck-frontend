@@ -144,22 +144,13 @@ function MobileTestCard({
       <div className="flex items-start gap-1">
         <Link href={`/tests/${test.id}`} className="min-w-0 flex-1">
           <a className="block min-w-0 space-y-1">
-            <div className="flex items-center gap-1.5 min-w-0">
-              <span
-                className={`h-1.5 w-1.5 shrink-0 rounded-full ${
-                  isActive || showActiveBadge
-                    ? "bg-emerald-500"
-                    : "bg-muted-foreground/40"
-                }`}
-              />
-              <p
-                className="min-w-0 flex-1 truncate text-[12px] font-medium leading-tight text-primary"
-                title={test.title}
-              >
-                {test.title}
-              </p>
-            </div>
-            <p className="pl-3.5 text-[10px] leading-tight tabular-nums text-muted-foreground">
+            <p
+              className="truncate text-[12px] font-medium leading-tight text-primary"
+              title={test.title}
+            >
+              {test.title}
+            </p>
+            <p className="text-[10px] leading-tight tabular-nums text-muted-foreground">
               {shortDuration(test.duration)}
               <span className="mx-1 text-border">·</span>
               {test.stats.total} invited
