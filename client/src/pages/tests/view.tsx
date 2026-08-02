@@ -251,79 +251,78 @@ export default function ViewTest() {
         </header>
         
         {/* View test content */}
-        <main className="flex-1 min-h-0 overflow-y-auto bg-gray-50 pt-16 lg:pt-0">
-          <div className="py-6 px-4 sm:px-6 lg:px-8">
+        <main className="flex-1 min-h-0 overflow-y-auto bg-gray-50 pt-14 lg:pt-0">
+          <div className="py-4 px-3 sm:py-6 sm:px-6 lg:px-8">
             {isLoading ? (
               <div className="text-center py-10">
                 <p>Loading test details...</p>
               </div>
             ) : (
               <>
-                <div className="flex items-center justify-between mb-6 lg:hidden">
-                  <div className="flex items-center space-x-2">
-                    <Button variant="ghost" size="icon" asChild>
-                      <Link href="/tests">
-                        <ArrowLeft className="h-5 w-5" />
-                      </Link>
-                    </Button>
-                    <h1 className="text-xl font-bold text-gray-900">{typedTest?.title}</h1>
-                  </div>
+                <div className="flex items-center gap-2 mb-4 lg:hidden min-w-0">
+                  <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" asChild>
+                    <Link href="/tests">
+                      <ArrowLeft className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                  <h1 className="text-base font-semibold text-gray-900 truncate">{typedTest?.title}</h1>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-6 mb-4 sm:mb-6">
                   <Card className="md:col-span-2">
-                    <CardHeader>
-                      <CardTitle>Test Information</CardTitle>
+                    <CardHeader className="p-3 sm:p-6">
+                      <CardTitle className="text-sm sm:text-lg">Test Information</CardTitle>
                       {typedTest.description && (
-                        <CardDescription>
+                        <CardDescription className="text-xs sm:text-sm">
                           {typedTest.description}
                         </CardDescription>
                       )}
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="p-3 pt-0 sm:p-6 sm:pt-0">
                       <dl className="divide-y divide-gray-200">
-                        <div className="py-3 grid grid-cols-3 gap-2">
-                          <dt className="text-sm font-medium text-gray-500 flex items-center">
-                            <Clock className="h-4 w-4 mr-1.5 text-gray-400" />
+                        <div className="py-2.5 sm:py-3 grid grid-cols-3 gap-2">
+                          <dt className="text-xs sm:text-sm font-medium text-gray-500 flex items-center">
+                            <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 text-gray-400" />
                             Duration
                           </dt>
-                          <dd className="text-sm text-gray-900 col-span-2">
+                          <dd className="text-xs sm:text-sm text-gray-900 col-span-2">
                             {formatDuration(typedTest.duration)}
                           </dd>
                         </div>
-                        <div className="py-3 grid grid-cols-3 gap-2">
-                          <dt className="text-sm font-medium text-gray-500 flex items-center">
-                            <CheckCircle className="h-4 w-4 mr-1.5 text-gray-400" />
-                            Passing Score
+                        <div className="py-2.5 sm:py-3 grid grid-cols-3 gap-2">
+                          <dt className="text-xs sm:text-sm font-medium text-gray-500 flex items-center">
+                            <CheckCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 text-gray-400" />
+                            Passing
                           </dt>
-                          <dd className="text-sm text-gray-900 col-span-2">
+                          <dd className="text-xs sm:text-sm text-gray-900 col-span-2">
                             {typedTest.passingScore}%
                           </dd>
                         </div>
-                        <div className="py-3 grid grid-cols-3 gap-2">
-                          <dt className="text-sm font-medium text-gray-500 flex items-center">
-                            <Calendar className="h-4 w-4 mr-1.5 text-gray-400" />
-                            Created On
+                        <div className="py-2.5 sm:py-3 grid grid-cols-3 gap-2">
+                          <dt className="text-xs sm:text-sm font-medium text-gray-500 flex items-center">
+                            <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 text-gray-400" />
+                            Created
                           </dt>
-                          <dd className="text-sm text-gray-900 col-span-2">
+                          <dd className="text-xs sm:text-sm text-gray-900 col-span-2">
                             {formatDate(typedTest.createdAt)}
                           </dd>
                         </div>
-                        <div className="py-3 grid grid-cols-3 gap-2">
-                          <dt className="text-sm font-medium text-gray-500 flex items-center">
-                            <Users className="h-4 w-4 mr-1.5 text-gray-400" />
+                        <div className="py-2.5 sm:py-3 grid grid-cols-3 gap-2">
+                          <dt className="text-xs sm:text-sm font-medium text-gray-500 flex items-center">
+                            <Users className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 text-gray-400" />
                             Questions
                           </dt>
-                          <dd className="text-sm text-gray-900 col-span-2">
+                          <dd className="text-xs sm:text-sm text-gray-900 col-span-2">
                             {typedTest.questions?.length || 0} questions
                           </dd>
                         </div>
                       </dl>
                       
-                      <div className="mt-4 flex space-x-2">
+                      <div className="mt-3 sm:mt-4 grid grid-cols-2 gap-2">
                         <Button 
                           variant="outline"
-                          className="w-full"
+                          size="sm"
+                          className="h-8 text-xs sm:h-9 sm:text-sm"
                           onClick={() => {
                             const url = `${window.location.origin}/public-test/${testId}`;
                             navigator.clipboard.writeText(url);
@@ -333,33 +332,36 @@ export default function ViewTest() {
                             });
                           }}
                         >
-                          <Share2 className="h-4 w-4 mr-1.5" />
-                          Share Public Link
+                          <Share2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1" />
+                          Share
                         </Button>
                         <Button 
                           variant="outline"
-                          className="w-full" 
+                          size="sm"
+                          className="h-8 text-xs sm:h-9 sm:text-sm"
                           onClick={() => setIsInviteDialogOpen(true)}
                         >
-                          <Users className="h-4 w-4 mr-1.5" />
-                          Invite Candidate
+                          <Users className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1" />
+                          Invite
                         </Button>
                         <Button 
                           variant="outline"
-                          className="w-full" 
+                          size="sm"
+                          className="h-8 text-xs sm:h-9 sm:text-sm"
                           onClick={() => setIsBulkInviteDialogOpen(true)}
                         >
-                          <Users className="h-4 w-4 mr-1.5" />
+                          <Users className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1" />
                           Bulk Invite
                         </Button>
                         <Button 
                           variant="outline"
-                          className="w-full" 
+                          size="sm"
+                          className="h-8 text-xs sm:h-9 sm:text-sm"
                           asChild
                         >
                           <Link href={`/tests/${testId}/edit`}>
-                            <Edit className="h-4 w-4 mr-1.5" />
-                            Edit Test
+                            <Edit className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1" />
+                            Edit
                           </Link>
                         </Button>
                       </div>
@@ -425,24 +427,84 @@ export default function ViewTest() {
                 </div>
                 
                 <Card>
-                  <CardHeader>
-                    <CardTitle>Candidates</CardTitle>
+                  <CardHeader className="p-3 sm:p-6">
+                    <CardTitle className="text-sm sm:text-lg">Candidates</CardTitle>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="p-3 pt-0 sm:p-6 sm:pt-0">
                     <Tabs defaultValue="all">
-                      <TabsList className="mb-4">
-                        <TabsTrigger value="all">All</TabsTrigger>
-                        <TabsTrigger value="completed">Completed</TabsTrigger>
-                        <TabsTrigger value="in-progress">In Progress</TabsTrigger>
-                        <TabsTrigger value="pending">Pending</TabsTrigger>
+                      <TabsList className="mb-3 sm:mb-4 w-full sm:w-auto grid grid-cols-2 sm:inline-flex h-auto sm:h-9 p-1 gap-1">
+                        <TabsTrigger value="all" className="text-xs sm:text-sm h-8">All</TabsTrigger>
+                        <TabsTrigger value="completed" className="text-xs sm:text-sm h-8">Completed</TabsTrigger>
+                        <TabsTrigger value="in-progress" className="text-xs sm:text-sm h-8">In Progress</TabsTrigger>
+                        <TabsTrigger value="pending" className="text-xs sm:text-sm h-8">Pending</TabsTrigger>
                       </TabsList>
                       
-                      <TabsContent value="all">
+                      <TabsContent value="all" className="mt-0">
                         {candidatesLoading ? (
-                          <div className="text-center py-6">
-                            <p>Loading candidates...</p>
+                          <div className="text-center py-6 text-sm text-muted-foreground">
+                            Loading candidates...
                           </div>
                         ) : typedCandidates && typedCandidates.length > 0 ? (
+                          <>
+                            {/* Mobile cards */}
+                            <ul className="md:hidden divide-y divide-border -mx-3 border-t">
+                              {typedCandidates.map((candidate: any) => (
+                                <li key={candidate.id} className="px-3 py-3 space-y-1.5">
+                                  <div className="flex items-start justify-between gap-2">
+                                    <div className="min-w-0">
+                                      <p className="text-sm font-medium truncate">{candidate.name}</p>
+                                      <p className="text-xs text-muted-foreground truncate">{candidate.email}</p>
+                                    </div>
+                                    <Badge
+                                      variant={
+                                        candidate.status === "completed"
+                                          ? "success"
+                                          : candidate.status === "in_progress"
+                                          ? "secondary"
+                                          : "outline"
+                                      }
+                                      className="text-[10px] px-1.5 py-0 h-5 shrink-0"
+                                    >
+                                      {candidate.status === "pending"
+                                        ? "Pending"
+                                        : candidate.status === "in_progress"
+                                        ? "In Progress"
+                                        : "Completed"}
+                                    </Badge>
+                                  </div>
+                                  <div className="flex items-center justify-between">
+                                    <p className="text-[11px] text-muted-foreground">
+                                      {candidate.score !== undefined ? `Score ${candidate.score}% · ` : ""}
+                                      {candidate.invitedAt
+                                        ? new Date(candidate.invitedAt).toLocaleDateString("en-US", {
+                                            month: "short",
+                                            day: "numeric",
+                                          })
+                                        : ""}
+                                    </p>
+                                    <div className="flex">
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-8 w-8"
+                                        onClick={() => copyTestLink(candidate.testLink)}
+                                      >
+                                        <Copy className="h-3.5 w-3.5" />
+                                      </Button>
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-8 w-8 text-red-600"
+                                        onClick={() => handleDeleteCandidate(candidate.id)}
+                                      >
+                                        <Trash2 className="h-3.5 w-3.5" />
+                                      </Button>
+                                    </div>
+                                  </div>
+                                </li>
+                              ))}
+                            </ul>
+                            <div className="hidden md:block overflow-x-auto">
                           <Table>
                             <TableHeader>
                               <TableRow>
@@ -507,28 +569,31 @@ export default function ViewTest() {
                               ))}
                             </TableBody>
                           </Table>
+                            </div>
+                          </>
                         ) : (
-                          <div className="text-center py-6">
-                            <p>No candidates found.</p>
+                          <div className="text-center py-6 text-sm text-muted-foreground">
+                            No candidates found.
                           </div>
                         )}
                       </TabsContent>
                       
-                      <TabsContent value="completed">
+                      <TabsContent value="completed" className="mt-0">
                         {candidatesLoading ? (
-                          <div className="text-center py-6">
-                            <p>Loading candidates...</p>
+                          <div className="text-center py-6 text-sm text-muted-foreground">
+                            Loading candidates...
                           </div>
                         ) : typedCandidates?.filter((c: any) => c.status === "completed").length > 0 ? (
+                          <div className="overflow-x-auto">
                           <Table>
                             <TableHeader>
                               <TableRow>
                                 <TableHead>Name</TableHead>
                                 <TableHead>Email</TableHead>
-                                <TableHead>Phone</TableHead>
-                                <TableHead>Completed At</TableHead>
+                                <TableHead className="hidden sm:table-cell">Phone</TableHead>
+                                <TableHead>Completed</TableHead>
                                 <TableHead>Score</TableHead>
-                                <TableHead>Time Taken</TableHead>
+                                <TableHead className="hidden md:table-cell">Time Taken</TableHead>
                               </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -536,8 +601,8 @@ export default function ViewTest() {
                                 <TableRow key={candidate.id}>
                                   <TableCell>{candidate.name}</TableCell>
                                   <TableCell>{candidate.email}</TableCell>
-                                  <TableCell>{candidate.phone || "-"}</TableCell>
-                                  <TableCell>{formatDate(candidate.completedAt)}</TableCell>
+                                  <TableCell className="hidden sm:table-cell">{candidate.phone || "-"}</TableCell>
+                                  <TableCell className="text-xs whitespace-nowrap">{candidate.completedAt ? new Date(candidate.completedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "—"}</TableCell>
                                   <TableCell>
                                     <Badge
                                       variant={
@@ -549,7 +614,7 @@ export default function ViewTest() {
                                       {candidate.score}%
                                     </Badge>
                                   </TableCell>
-                                  <TableCell>
+                                  <TableCell className="hidden md:table-cell">
                                     {candidate.startedAt && candidate.completedAt
                                       ? formatDuration(
                                           Math.round(
@@ -564,29 +629,29 @@ export default function ViewTest() {
                               ))}
                             </TableBody>
                           </Table>
+                          </div>
                         ) : (
-                          <div className="text-center py-6">
-                            <p className="text-sm text-gray-500">
-                              No candidates have completed the test yet.
-                            </p>
+                          <div className="text-center py-6 text-sm text-muted-foreground">
+                            No candidates have completed the test yet.
                           </div>
                         )}
                       </TabsContent>
                       
-                      <TabsContent value="in-progress">
+                      <TabsContent value="in-progress" className="mt-0">
                         {candidatesLoading ? (
-                          <div className="text-center py-6">
-                            <p>Loading candidates...</p>
+                          <div className="text-center py-6 text-sm text-muted-foreground">
+                            Loading candidates...
                           </div>
                         ) : typedCandidates?.filter((c: any) => c.status === "in_progress").length > 0 ? (
+                          <div className="overflow-x-auto">
                           <Table>
                             <TableHeader>
                               <TableRow>
                                 <TableHead>Name</TableHead>
                                 <TableHead>Email</TableHead>
-                                <TableHead>Phone</TableHead>
-                                <TableHead>Started At</TableHead>
-                                <TableHead>Time Elapsed</TableHead>
+                                <TableHead className="hidden sm:table-cell">Phone</TableHead>
+                                <TableHead>Started</TableHead>
+                                <TableHead className="hidden md:table-cell">Elapsed</TableHead>
                                 <TableHead className="text-right">Actions</TableHead>
                               </TableRow>
                             </TableHeader>
@@ -595,9 +660,9 @@ export default function ViewTest() {
                                 <TableRow key={candidate.id}>
                                   <TableCell>{candidate.name}</TableCell>
                                   <TableCell>{candidate.email}</TableCell>
-                                  <TableCell>{candidate.phone || "-"}</TableCell>
-                                  <TableCell>{formatDate(candidate.startedAt)}</TableCell>
-                                  <TableCell>
+                                  <TableCell className="hidden sm:table-cell">{candidate.phone || "-"}</TableCell>
+                                  <TableCell className="text-xs whitespace-nowrap">{candidate.startedAt ? new Date(candidate.startedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "—"}</TableCell>
+                                  <TableCell className="hidden md:table-cell">
                                     {candidate.startedAt
                                       ? formatDuration(
                                           Math.round(
@@ -633,28 +698,28 @@ export default function ViewTest() {
                               ))}
                             </TableBody>
                           </Table>
+                          </div>
                         ) : (
-                          <div className="text-center py-6">
-                            <p className="text-sm text-gray-500">
-                              No candidates are currently taking the test.
-                            </p>
+                          <div className="text-center py-6 text-sm text-muted-foreground">
+                            No candidates are currently taking the test.
                           </div>
                         )}
                       </TabsContent>
                       
-                      <TabsContent value="pending">
+                      <TabsContent value="pending" className="mt-0">
                         {candidatesLoading ? (
-                          <div className="text-center py-6">
-                            <p>Loading candidates...</p>
+                          <div className="text-center py-6 text-sm text-muted-foreground">
+                            Loading candidates...
                           </div>
                         ) : typedCandidates?.filter((c: any) => c.status === "pending").length > 0 ? (
+                          <div className="overflow-x-auto">
                           <Table>
                             <TableHeader>
                               <TableRow>
                                 <TableHead>Name</TableHead>
                                 <TableHead>Email</TableHead>
-                                <TableHead>Phone</TableHead>
-                                <TableHead>Invited At</TableHead>
+                                <TableHead className="hidden sm:table-cell">Phone</TableHead>
+                                <TableHead>Invited</TableHead>
                                 <TableHead className="text-right">Actions</TableHead>
                               </TableRow>
                             </TableHeader>
@@ -663,27 +728,28 @@ export default function ViewTest() {
                                 <TableRow key={candidate.id}>
                                   <TableCell>{candidate.name}</TableCell>
                                   <TableCell>{candidate.email}</TableCell>
-                                  <TableCell>{candidate.phone || "-"}</TableCell>
-                                  <TableCell>{formatDate(candidate.invitedAt)}</TableCell>
+                                  <TableCell className="hidden sm:table-cell">{candidate.phone || "-"}</TableCell>
+                                  <TableCell className="text-xs whitespace-nowrap">{new Date(candidate.invitedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</TableCell>
                                   <TableCell className="text-right">
-                                    <div className="flex justify-end space-x-2">
+                                    <div className="flex justify-end">
                                       <Button
                                         variant="ghost"
                                         size="icon"
+                                        className="h-8 w-8"
                                         onClick={() => copyTestLink(candidate.testLink)}
                                       >
-                                        <Copy className="h-4 w-4" />
+                                        <Copy className="h-3.5 w-3.5" />
                                         <span className="sr-only">Copy link</span>
                                       </Button>
                                       <Button
                                         variant="ghost"
                                         size="icon"
+                                        className="h-8 w-8"
                                         onClick={() => {
-                                          // In a real app, this would open email
                                           window.open(`mailto:${candidate.email}?subject=Invitation to take a coding test&body=Please take the test at ${window.location.origin}/take-test/${candidate.testLink}`, "_blank");
                                         }}
                                       >
-                                        <Mail className="h-4 w-4" />
+                                        <Mail className="h-3.5 w-3.5" />
                                         <span className="sr-only">Send email</span>
                                       </Button>
                                     </div>
@@ -692,11 +758,10 @@ export default function ViewTest() {
                               ))}
                             </TableBody>
                           </Table>
+                          </div>
                         ) : (
-                          <div className="text-center py-6">
-                            <p className="text-sm text-gray-500">
-                              No pending invitations.
-                            </p>
+                          <div className="text-center py-6 text-sm text-muted-foreground">
+                            No pending invitations.
                           </div>
                         )}
                       </TabsContent>
@@ -711,26 +776,26 @@ export default function ViewTest() {
       
       {/* Invite Candidate Dialog */}
       <Dialog open={isInviteDialogOpen} onOpenChange={setIsInviteDialogOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="w-[calc(100%-1rem)] max-w-md p-4 sm:p-6 rounded-xl max-h-[90dvh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Invite Candidate</DialogTitle>
-            <DialogDescription>
-              Send a test invitation to a candidate for "{typedTest?.title}".
+            <DialogTitle className="text-base sm:text-lg">Invite Candidate</DialogTitle>
+            <DialogDescription className="text-xs sm:text-sm">
+              Send a test invitation for "{typedTest?.title}".
             </DialogDescription>
           </DialogHeader>
           
           <Form {...inviteForm}>
-            <form onSubmit={inviteForm.handleSubmit(onInviteSubmit)} className="space-y-4">
+            <form onSubmit={inviteForm.handleSubmit(onInviteSubmit)} className="space-y-3.5 sm:space-y-4">
               <FormField
                 control={inviteForm.control}
                 name="name"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
+                  <FormItem className="space-y-1.5">
+                    <FormLabel className="text-[13px] sm:text-sm">Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="John Doe" {...field} />
+                      <Input placeholder="John Doe" className="h-10 text-[15px] sm:text-sm" {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-xs" />
                   </FormItem>
                 )}
               />
@@ -739,12 +804,12 @@ export default function ViewTest() {
                 control={inviteForm.control}
                 name="email"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
+                  <FormItem className="space-y-1.5">
+                    <FormLabel className="text-[13px] sm:text-sm">Email</FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="john@example.com" {...field} />
+                      <Input type="email" placeholder="john@example.com" className="h-10 text-[15px] sm:text-sm" {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-xs" />
                   </FormItem>
                 )}
               />
@@ -753,36 +818,39 @@ export default function ViewTest() {
                 control={inviteForm.control}
                 name="phone"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Phone Number</FormLabel>
+                  <FormItem className="space-y-1.5">
+                    <FormLabel className="text-[13px] sm:text-sm">Phone Number</FormLabel>
                     <FormControl>
                       <div className="flex">
-                        <span className="flex items-center px-3 border border-r-0 rounded-l-md bg-gray-50 text-gray-500">+91</span>
+                        <span className="flex items-center px-3 border border-r-0 rounded-l-md bg-muted text-muted-foreground text-sm">+91</span>
                         <Input 
                           type="tel" 
+                          inputMode="numeric"
                           placeholder="9876543210" 
-                          className="rounded-l-none" 
+                          className="rounded-l-none h-10 text-[15px] sm:text-sm" 
                           maxLength={10}
                           {...field}
                         />
                       </div>
                     </FormControl>
-                    <FormDescription>Enter 10 digit mobile number without country code</FormDescription>
-                    <FormMessage />
+                    <FormDescription className="text-[11px] sm:text-sm">10-digit mobile number</FormDescription>
+                    <FormMessage className="text-xs" />
                   </FormItem>
                 )}
               />
               
-              <DialogFooter className="mt-4">
+              <DialogFooter className="mt-2 gap-2 flex-col-reverse sm:flex-row">
                 <Button
                   type="button"
                   variant="outline"
+                  className="h-10 sm:h-9"
                   onClick={() => setIsInviteDialogOpen(false)}
                 >
                   Cancel
                 </Button>
                 <Button 
                   type="submit"
+                  className="h-10 sm:h-9"
                   disabled={inviteMutation.isPending}
                 >
                   {inviteMutation.isPending ? "Inviting..." : "Invite Candidate"}
@@ -795,11 +863,11 @@ export default function ViewTest() {
       
       {/* Bulk Invite Dialog */}
       <Dialog open={isBulkInviteDialogOpen} onOpenChange={setIsBulkInviteDialogOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="w-[calc(100%-1rem)] max-w-2xl p-4 sm:p-6 rounded-xl max-h-[92dvh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Bulk Invite Candidates</DialogTitle>
-            <DialogDescription>
-              Upload an Excel file with candidate details. The file should have columns for "Candidate Name", "Phone Number", and "Email ID".
+            <DialogTitle className="text-base sm:text-lg">Bulk Invite Candidates</DialogTitle>
+            <DialogDescription className="text-xs sm:text-sm">
+              Upload Excel with columns: "Candidate Name", "Phone Number", "Email ID".
             </DialogDescription>
           </DialogHeader>
           <BulkInvite 
@@ -810,7 +878,7 @@ export default function ViewTest() {
             testId={testId}
           />
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsBulkInviteDialogOpen(false)}>Close</Button>
+            <Button variant="outline" className="h-10 sm:h-9" onClick={() => setIsBulkInviteDialogOpen(false)}>Close</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
