@@ -1,7 +1,8 @@
+import { useEffect, useRef, type ReactNode } from "react";
 import { Layers, CheckCircle2, BarChart3, Users } from "lucide-react";
 
 type AuthLayoutProps = {
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
 const features = [
@@ -11,6 +12,50 @@ const features = [
 ];
 
 export function AuthLayout({ children }: AuthLayoutProps) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const root = scrollRef.current;
+    if (!root) return;
+
+    const scrollFieldIntoView = (el: HTMLElement) => {
+      // Wait for keyboard / visualViewport to settle
+      window.setTimeout(() => {
+        el.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+      }, 280);
+    };
+
+    const onFocusIn = (e: FocusEvent) => {
+      const t = e.target;
+      if (!(t instanceof HTMLElement)) return;
+      if (t.tagName !== "INPUT" && t.tagName !== "TEXTAREA") return;
+      scrollFieldIntoView(t);
+    };
+
+    // iOS often doesn't resize layout for keyboard — pad the scroll area so the form can move up
+    const vv = window.visualViewport;
+    const syncKeyboardInset = () => {
+      if (!vv) {
+        root.style.paddingBottom = "";
+        return;
+      }
+      const inset = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+      root.style.paddingBottom = `${Math.max(32, inset + 24)}px`;
+    };
+
+    root.addEventListener("focusin", onFocusIn);
+    vv?.addEventListener("resize", syncKeyboardInset);
+    vv?.addEventListener("scroll", syncKeyboardInset);
+    syncKeyboardInset();
+
+    return () => {
+      root.removeEventListener("focusin", onFocusIn);
+      vv?.removeEventListener("resize", syncKeyboardInset);
+      vv?.removeEventListener("scroll", syncKeyboardInset);
+      root.style.paddingBottom = "";
+    };
+  }, []);
+
   return (
     <div className="h-dvh max-h-dvh flex overflow-hidden">
       <div className="auth-panel text-white">
@@ -43,10 +88,13 @@ export function AuthLayout({ children }: AuthLayoutProps) {
         </ul>
       </div>
 
-      <div className="flex-1 min-h-0 app-scroll flex flex-col items-center justify-center px-5 py-8 sm:px-6 sm:py-12 lg:px-8 app-main">
-        <div className="w-full max-w-sm sm:max-w-md my-auto">
-          <div className="lg:hidden mb-6 flex items-center justify-center gap-2.5">
-            <div className="h-9 w-9 rounded-lg bg-primary flex items-center justify-center text-primary-foreground">
+      <div
+        ref={scrollRef}
+        className="app-scroll app-main flex min-h-0 flex-1 flex-col px-5 pt-8 sm:px-6 sm:py-12 lg:px-8"
+      >
+        <div className="mx-auto my-auto w-full max-w-sm sm:max-w-md">
+          <div className="mb-6 flex items-center justify-center gap-2.5 lg:hidden">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
               <Layers className="h-5 w-5" />
             </div>
             <span className="text-xl font-bold text-foreground">HireCheck</span>
