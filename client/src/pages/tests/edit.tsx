@@ -58,7 +58,7 @@ export default function EditTest() {
   }
   
   return (
-    <div className="min-h-screen flex">
+    <div className="h-screen overflow-hidden flex">
       {/* Sidebar */}
       <Sidebar />
       
@@ -66,9 +66,9 @@ export default function EditTest() {
       <MobileSidebar />
       
       {/* Main content */}
-      <div className="flex-1 flex flex-col overflow-hidden pt-0 lg:pt-0">
+      <div className="flex-1 flex flex-col min-h-0 overflow-hidden pt-0 lg:pt-0">
         {/* Top bar */}
-        <header className="hidden lg:flex items-center justify-between h-16 bg-white border-b border-gray-200 px-4 sm:px-6">
+        <header className="hidden lg:flex shrink-0 items-center justify-between h-16 bg-white border-b border-gray-200 px-4 sm:px-6">
           <div className="flex items-center space-x-2">
             <Button variant="ghost" size="icon" asChild>
               <Link href="/tests">
@@ -87,7 +87,7 @@ export default function EditTest() {
         </header>
         
         {/* Edit test content */}
-        <main className="flex-1 overflow-y-auto bg-gray-50 pt-16 lg:pt-0">
+        <main className="flex-1 min-h-0 overflow-y-auto bg-gray-50 pt-16 lg:pt-0">
           <div className="py-6 px-4 sm:px-6 lg:px-8">
             {isLoading ? (
               <div className="text-center py-10">

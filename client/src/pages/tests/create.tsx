@@ -37,7 +37,7 @@ export default function CreateTest() {
   };
   
   return (
-    <div className="min-h-screen flex">
+    <div className="h-screen overflow-hidden flex">
       {/* Sidebar */}
       <Sidebar />
       
@@ -45,9 +45,9 @@ export default function CreateTest() {
       <MobileSidebar />
       
       {/* Main content */}
-      <div className="flex-1 flex flex-col overflow-hidden pt-0 lg:pt-0">
+      <div className="flex-1 flex flex-col min-h-0 overflow-hidden pt-0 lg:pt-0">
         {/* Top bar */}
-        <header className="hidden lg:flex items-center justify-between h-16 bg-white border-b border-gray-200 px-4 sm:px-6">
+        <header className="hidden lg:flex shrink-0 items-center justify-between h-16 bg-white border-b border-gray-200 px-4 sm:px-6">
           <div>
             <h1 className="text-xl font-bold text-gray-900">Create New Test</h1>
           </div>
@@ -59,7 +59,7 @@ export default function CreateTest() {
         </header>
         
         {/* Create test content */}
-        <main className="flex-1 overflow-y-auto bg-gray-50 pt-16 lg:pt-0">
+        <main className="flex-1 min-h-0 overflow-y-auto bg-gray-50 pt-16 lg:pt-0">
           <div className="py-6 px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between mb-6">
               <h1 className="text-2xl font-bold text-gray-900 lg:hidden">Create New Test</h1>

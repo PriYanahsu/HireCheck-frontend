@@ -49,22 +49,22 @@ const Sidebar = () => {
   };
 
   return (
-    <aside className="hidden lg:flex flex-col w-60 bg-sidebar text-sidebar-foreground border-r border-sidebar-border">
-      <div className="flex items-center gap-3 h-16 px-5 border-b border-sidebar-border">
+    <aside className="hidden lg:flex flex-col w-60 shrink-0 h-full overflow-hidden bg-sidebar text-sidebar-foreground border-r border-sidebar-border">
+      <div className="flex items-center gap-3 h-16 shrink-0 px-5 border-b border-sidebar-border">
         <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
           <Layers className="h-4 w-4 text-primary-foreground" />
         </div>
         <span className="text-lg font-bold tracking-tight">HireCheck</span>
       </div>
 
-      <nav className="flex-1 px-3 py-5 overflow-y-auto">
+      <nav className="flex-1 min-h-0 px-3 py-5 overflow-y-auto">
         <p className="px-3 mb-2 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
           Overview
         </p>
         <div className="space-y-1">{mainNavItems.map(navLink)}</div>
       </nav>
 
-      <div className="border-t border-sidebar-border p-4">
+      <div className="shrink-0 border-t border-sidebar-border p-4">
         <div className="flex items-center gap-3">
           <Avatar className="h-9 w-9 ring-2 ring-border">
             <AvatarImage src={`https://ui-avatars.com/api/?name=${user?.name}&background=3b6cf5&color=fff`} />

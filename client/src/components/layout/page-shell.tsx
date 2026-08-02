@@ -10,11 +10,11 @@ type PageShellProps = {
 
 export function PageShell({ title, subtitle, action, children }: PageShellProps) {
   return (
-    <div className="min-h-screen flex">
+    <div className="h-screen overflow-hidden flex">
       <Sidebar />
       <MobileSidebar />
 
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
         <header className="page-header">
           <div>
             <h1 className="text-xl font-semibold tracking-tight text-foreground">{title}</h1>
@@ -25,7 +25,7 @@ export function PageShell({ title, subtitle, action, children }: PageShellProps)
           {action}
         </header>
 
-        <main className="flex-1 overflow-y-auto app-main pt-16 lg:pt-0">
+        <main className="flex-1 min-h-0 overflow-y-auto app-main pt-16 lg:pt-0">
           <div className="page-content">{children}</div>
         </main>
       </div>
