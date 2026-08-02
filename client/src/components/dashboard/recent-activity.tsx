@@ -16,10 +16,39 @@ type Activity = {
   autoSubmitted?: boolean;
 };
 
+/** One row per candidate+test: prefer completed over started. */
+function dedupeActivities(activities: Activity[]): Activity[] {
+  const byKey = new Map<string, Activity>();
+
+  for (const activity of activities) {
+    const key = `${activity.candidateId}:${activity.testId}`;
+    const existing = byKey.get(key);
+    if (!existing) {
+      byKey.set(key, activity);
+      continue;
+    }
+    // Prefer completed; if same action, keep the newer timestamp
+    if (activity.action === "completed" && existing.action !== "completed") {
+      byKey.set(key, activity);
+    } else if (
+      activity.action === existing.action &&
+      activity.timestamp > existing.timestamp
+    ) {
+      byKey.set(key, activity);
+    }
+  }
+
+  return Array.from(byKey.values()).sort((a, b) =>
+    b.timestamp.localeCompare(a.timestamp)
+  );
+}
+
 export function RecentActivity() {
-  const { data: activities, isLoading, error } = useQuery<Activity[]>({
+  const { data: rawActivities, isLoading, error } = useQuery<Activity[]>({
     queryKey: ["/api/dashboard/recent-activity"],
   });
+
+  const activities = rawActivities ? dedupeActivities(rawActivities) : rawActivities;
 
   if (isLoading) {
     return (
@@ -102,7 +131,7 @@ export function RecentActivity() {
                         </Badge>
                       )}
                       {activity.action === "started" && (
-                        <Badge variant="warning" className="mt-1">
+                        <Badge variant="secondary" className="mt-1">
                           In Progress
                         </Badge>
                       )}
